@@ -1,0 +1,19 @@
+{
+  "Messages": [
+    {
+      "Name": "Startup",
+      "Body": {
+        "Parameters": [
+          {
+            "Name": "user",
+            "Value": "kabata"
+          },
+          {
+            "Name": "database",
+            "Value": "postgres"
+          }
+        ]
+      }
+    }
+  ]
+}

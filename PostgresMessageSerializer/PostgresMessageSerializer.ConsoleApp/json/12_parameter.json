@@ -1,0 +1,51 @@
+{
+    "Messages": [
+      {
+        "Name": "Parse",
+        "Body": {
+          "Query": "SELECT * FROM table1 WHERE id = $1",
+          "PreparedStatementName": "stmt5"
+        }
+      },
+      {
+        "Name": "Bind",
+        "Body": {
+          "PortalName": "portal5",
+          "PreparedStatementName": "stmt5",
+          "ParameterValues": [
+            {
+              "Value": "Mg=="
+            }
+          ]
+        }
+      },
+      {
+        "Name": "Execute",
+        "Body": {
+          "PortalName": "portal5"
+        }
+      },
+      {
+        "Name": "Bind",
+        "Body": {
+          "PortalName": "portal6",
+          "PreparedStatementName": "stmt5",
+          "ParameterValues": [
+            {
+              "Value": "NA=="
+            }
+          ]
+        }
+      },
+      {
+        "Name": "Execute",
+        "Body": {
+          "PortalName": "portal6"
+        }
+      },
+      {
+        "Name": "Sync",
+        "Body": {}
+      }
+    ]
+  }

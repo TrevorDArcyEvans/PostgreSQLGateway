@@ -1,0 +1,10 @@
+{
+    "Messages": [
+      {
+        "Name": "Query",
+        "Body": {
+          "Query": "SELECT * FROM table1"
+        }
+      }
+    ]
+  }

@@ -1,0 +1,28 @@
+{
+    "Messages": [
+      {
+        "Name": "Parse",
+        "Body": {
+          "Query": "SELECT 1/0",
+          "PreparedStatementName": "stmt2"
+        }
+      },
+      {
+        "Name": "Bind",
+        "Body": {
+          "PortalName": "portal2",
+          "PreparedStatementName": "stmt2"
+        }
+      },
+      {
+        "Name": "Execute",
+        "Body": {
+          "PortalName": "portal2"
+        }
+      },
+      {
+        "Name": "Sync",
+        "Body": {}
+      }
+    ]
+  }

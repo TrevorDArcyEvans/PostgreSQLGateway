@@ -1,0 +1,35 @@
+{
+  "Messages": [
+    {
+      "Name": "Query",
+      "Body": {
+        "Query": "BEGIN"
+      }
+    },
+    {
+      "Name": "Query",
+      "Body": {
+        "Query": "INSERT INTO table1 VALUES (10)"
+      }
+    },
+    {
+      "Name": "Query",
+      "Body": {
+        "Query": "INSERT INTO table1 VALUES (10)"
+      }
+    },
+    {
+      "Name": "Query",
+      "Body": {
+        "Query": "INSERT INTO table1 VALUES (11)"
+      }
+    },
+    {
+      "Name": "Query",
+      "Body": {
+        "Query": "END"
+      }
+    }
+  ],
+  "WaitCount": 5
+}

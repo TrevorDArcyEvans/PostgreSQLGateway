@@ -1,0 +1,35 @@
+{
+  "Messages": [
+    {
+      "Name": "Parse",
+      "Body": {
+        "Query": "SELECT * FROM table1",
+        "PreparedStatementName": "stmt1"
+      }
+    },
+    {
+      "Name": "Bind",
+      "Body": {
+        "PortalName": "portal1",
+        "PreparedStatementName": "stmt1"
+      }
+    },
+    {
+      "Name": "Describe",
+      "Body": {
+        "TargetType": "P",
+        "TargetName": "portal1"
+      }
+    },
+    {
+      "Name": "Execute",
+      "Body": {
+        "PortalName": "portal1"
+      }
+    },
+    {
+      "Name": "Sync",
+      "Body": {}
+    }
+  ]
+}

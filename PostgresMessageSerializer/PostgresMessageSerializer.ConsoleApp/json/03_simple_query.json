@@ -1,0 +1,10 @@
+{
+  "Messages": [
+    {
+      "Name": "Query",
+      "Body": {
+        "Query": "INSERT INTO table1 VALUES (1)"
+      }
+    }
+  ]
+}

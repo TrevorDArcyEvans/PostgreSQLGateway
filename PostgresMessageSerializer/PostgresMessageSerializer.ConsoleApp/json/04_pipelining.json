@@ -1,0 +1,23 @@
+{
+  "Messages": [
+    {
+      "Name": "Query",
+      "Body": {
+        "Query": "INSERT INTO table1 VALUES (2)"
+      }
+    },
+    {
+      "Name": "Query",
+      "Body": {
+        "Query": "INSERT INTO table1 VALUES (3)"
+      }
+    },
+    {
+      "Name": "Query",
+      "Body": {
+        "Query": "INSERT INTO table1 VALUES (4)"
+      }
+    }
+  ],
+  "WaitCount": 3
+}

@@ -1,0 +1,35 @@
+{
+    "Messages": [
+      {
+        "Name": "Parse",
+        "Body": {
+          "Query": "SELECT now()",
+          "PreparedStatementName": "stmt3"
+        }
+      },
+      {
+        "Name": "Parse",
+        "Body": {
+          "Query": "ROLLBACK",
+          "PreparedStatementName": "stmt4"
+        }
+      },
+      {
+        "Name": "Bind",
+        "Body": {
+          "PortalName": "portal4",
+          "PreparedStatementName": "stmt4"
+        }
+      },
+      {
+        "Name": "Execute",
+        "Body": {
+          "PortalName": "portal4"
+        }
+      },
+      {
+        "Name": "Sync",
+        "Body": {}
+      }
+    ]
+  }

@@ -1,0 +1,62 @@
+{
+    "Messages": [
+      {
+        "Name": "Parse",
+        "Body": {
+          "Query": "SELECT * FROM table1 ORDER BY id",
+          "PreparedStatementName": ""
+        }
+      },
+      {
+        "Name": "Bind",
+        "Body": {
+          "PortalName": "cur1",
+          "PreparedStatementName": ""
+        }
+      },
+      {
+        "Name": "Execute",
+        "Body": {
+          "PortalName": "cur1",
+          "Limit": 1
+        }
+      },
+      {
+        "Name": "Execute",
+        "Body": {
+          "PortalName": "cur1",
+          "Limit": 1
+        }
+      },
+      {
+        "Name": "Parse",
+        "Body": {
+          "Query": "MOVE 2 cur1",
+          "PreparedStatementName": ""
+        }
+      },
+      {
+        "Name": "Bind",
+        "Body": {
+          "PortalName": "",
+          "PreparedStatementName": ""
+        }
+      },
+      {
+        "Name": "Execute",
+        "Body": {
+          "PortalName": ""
+        }
+      },
+      {
+        "Name": "Execute",
+        "Body": {
+          "PortalName": "cur1"
+        }
+      },
+      {
+        "Name": "Sync",
+        "Body": {}
+      }
+    ]
+  }
