@@ -65,13 +65,31 @@ internal class Program
       listener.Start();
       _logger.LogInformation("Listening for connections on port {0}...", port);
 
-      // Accept incoming connections
-      using var client = listener.AcceptTcpClient();
-      _logger.LogInformation("Connection accepted from {0}.", client.Client.RemoteEndPoint);
-      var stream = client.GetStream();
+
       var isRunning = true;
+      Console.CancelKeyPress += (sender, e) =>
+      {
+        isRunning = false;
+        e.Cancel = true;
+      };
+
       while (isRunning)
       {
+        while (!listener.Pending())
+        {
+          Thread.Sleep(10);
+
+          if (!isRunning)
+          {
+            return;
+          }
+        }
+
+        // Accept incoming connections
+        using var client = await listener.AcceptTcpClientAsync();
+        _logger.LogInformation("Connection accepted from {0}.", client.Client.RemoteEndPoint);
+        await using var stream = client.GetStream();
+
         // receive data from the client
         var buffer = new byte[1024];
         var bytesRead = stream.Read(buffer, 0, buffer.Length);
@@ -84,8 +102,13 @@ internal class Program
         // TODO   check for SSL request et al
         var seq = new ReadOnlySequence<byte>(buffer[..bytesRead]);
         var reader = new SequenceReader<byte>(seq);
-        var ok1 = reader.TryReadBigEndian(out int length);
-        var ok2 = reader.TryReadBigEndian(out int value);
+        if (reader.TryReadBigEndian(out int length) && length == 8)
+        {
+          if (reader.TryReadBigEndian(out int value))
+          {
+            continue;
+          }
+        }
 
 
         var msg = serialiser.Deserialize(buffer[0..bytesRead]);
@@ -102,6 +125,8 @@ internal class Program
     }
     finally
     {
+      _logger.LogInformation("Shutting down...");
+
       // Stop listening for connections
       listener.Stop();
     }
