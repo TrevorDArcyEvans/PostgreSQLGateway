@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgreSQLGateway", "PostgreSQLGateway\PostgreSQLGateway.csproj", "{2AC5A9C9-F0A2-482F-BEEC-23EC32FE1C62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgresMessageSerializer", "PostgresMessageSerializer\PostgresMessageSerializer\PostgresMessageSerializer.csproj", "{69B8114C-E1ED-4F41-A100-0C95F19AF6B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgresMessageSerializer.ConsoleApp", "PostgresMessageSerializer\PostgresMessageSerializer.ConsoleApp\PostgresMessageSerializer.ConsoleApp.csproj", "{926FF4FC-13AA-474E-8B1D-1B89A5781169}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgresMessageSerializer.Tests", "PostgresMessageSerializer\PostgresMessageSerializer.Tests\PostgresMessageSerializer.Tests.csproj", "{CCFFB213-12B5-40E8-9A63-B4AABADDFB67}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2AC5A9C9-F0A2-482F-BEEC-23EC32FE1C62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AC5A9C9-F0A2-482F-BEEC-23EC32FE1C62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AC5A9C9-F0A2-482F-BEEC-23EC32FE1C62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AC5A9C9-F0A2-482F-BEEC-23EC32FE1C62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69B8114C-E1ED-4F41-A100-0C95F19AF6B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69B8114C-E1ED-4F41-A100-0C95F19AF6B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69B8114C-E1ED-4F41-A100-0C95F19AF6B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69B8114C-E1ED-4F41-A100-0C95F19AF6B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{926FF4FC-13AA-474E-8B1D-1B89A5781169}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{926FF4FC-13AA-474E-8B1D-1B89A5781169}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{926FF4FC-13AA-474E-8B1D-1B89A5781169}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{926FF4FC-13AA-474E-8B1D-1B89A5781169}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCFFB213-12B5-40E8-9A63-B4AABADDFB67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCFFB213-12B5-40E8-9A63-B4AABADDFB67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCFFB213-12B5-40E8-9A63-B4AABADDFB67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCFFB213-12B5-40E8-9A63-B4AABADDFB67}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
