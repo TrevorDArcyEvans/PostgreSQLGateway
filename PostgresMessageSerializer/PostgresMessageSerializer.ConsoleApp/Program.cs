@@ -60,7 +60,7 @@ public static class Program
       var (name, bodyJson) = Format(message);
       Console.WriteLine("<--    " + name + " " + bodyJson);
 
-      sendBytes.AddRange(serializer.Serialize(message));
+      sendBytes.AddRange(Serializer.Serialize(message));
     }
 
     stream.Write(sendBytes.ToArray());

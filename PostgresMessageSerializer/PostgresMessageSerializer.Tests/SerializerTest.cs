@@ -56,7 +56,7 @@ public class SerializerTest
     serializer.CustomTypes.Add(typeof(MockFrontendMessage));
 
     // act
-    var serialized = serializer.Serialize(message);
+    var serialized = Serializer.Serialize(message);
 
     // assert
     var expect = new byte[]
