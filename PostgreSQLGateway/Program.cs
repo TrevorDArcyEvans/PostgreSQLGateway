@@ -1,13 +1,10 @@
-﻿using System.Buffers;
-using PostgresMessageSerializer;
+﻿namespace PostgreSQLGateway;
 
-namespace PostgreSQLGateway;
-
-using System.Buffers.Binary;
+using System.Buffers;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using CommandLine;
+using PostgresMessageSerializer;
 
 internal static class Program
 {
@@ -22,7 +19,7 @@ internal static class Program
   {
     // Specify the IP address and port to listen on
     var ipAddress = IPAddress.Parse("0.0.0.0");
-    var port = 5432;
+    var port = opt.Port;
 
     // Create a TCP listener
     var listener = new TcpListener(ipAddress, port);
