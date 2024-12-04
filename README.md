@@ -1,5 +1,25 @@
 # PostgreSQL Gateway
 
+
+## TODO
+
+* support front end messages
+  * SSL request
+  * GSS API encryption request
+* support SSL
+  * https://learn.microsoft.com/en-us/dotnet/api/system.net.security.sslstream?view=net-9.0&redirectedfrom=MSDN 
+* support various front ends
+  * [psql](https://www.postgresguide.com/utilities/psql/)
+  * [Npgsql](https://www.npgsql.org/)
+  * [DBeaver](https://dbeaver.io/)
+* support PostgreSQL protocols
+  * simple
+  * extended
+* multi-threaded server
+* routing of queries
+  * probably via plugins aka extension point/s
+
+
 ## Further information
 <details>
 
@@ -8,7 +28,7 @@
 * [Building a PostgreSQL Wire Protocol Server using Vanilla, Modern Java 21](https://gavinray97.github.io/blog/postgres-wire-protocol-jdk-21)
 * [Demo implementations of the Postgres Wire Protocol](https://github.com/rgwood/odbc/tree/main)
 * [Postgres on the wire - A look at the PostgreSQL wire protocol](https://beta.pgcon.org/2014/schedule/attachments/330_postgres-for-the-wire.pdf)
-  * [local copy (pdf)](330_postgres-for-the-wire.pdf)
+  * [local copy (pdf)](docs/330_postgres-for-the-wire.pdf)
 * [PostgresMessageSerializer](https://github.com/kbth/PostgresMessageSerializer/tree/master)
 * [PostgreSQL System Catalogs](https://www.postgresql.org/docs/current/catalogs.html)
 * [Slon - A modern high performance PostgreSQL protocol implementation for .NET](https://github.com/NinoFloris/Slon)
