@@ -10,13 +10,7 @@ public class ParseMessage : FrontendMessage
 
   public string Query { get; set; } = string.Empty;
 
-  public short ParameterDataTypeOidsCount
-  {
-    get
-    {
-      return (short)ParameterDataTypeOids.Count;
-    }
-  }
+  public short ParameterDataTypeOidsCount => (short)ParameterDataTypeOids.Count;
 
   public IList<int> ParameterDataTypeOids { get; set; } = new List<int>();
 
