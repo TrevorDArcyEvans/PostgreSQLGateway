@@ -5,12 +5,15 @@ using Xunit;
 
 public class AuthenticationMessage_Test
 {
-  [Fact]
-  public void Serialize_Deserialize_roundtrip()
+  [Theory]
+  [InlineData(21)]
+  [InlineData(0)]
+  [InlineData(-21)]
+  public void Serialize_Deserialize_roundtrip(int authRes)
   {
     // arrange
     var sut = new AuthenticationMessage();
-    sut.AuthResult = 21;
+    sut.AuthResult = authRes;
 
     // act
     var data = sut.Serialize();
