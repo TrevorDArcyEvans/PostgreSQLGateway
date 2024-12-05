@@ -36,10 +36,16 @@ public class PostgresProtocolStream : MemoryStream
     int b;
     while ((b = base.ReadByte()) != 0)
     {
-      buffer.Add((byte)b);
+      buffer.Add((byte) b);
     }
 
     return SerializerCore.DeserializeString(buffer.ToArray());
+  }
+
+  public void Write(byte value)
+  {
+    var buffer = SerializerCore.Serialize(value);
+    base.Write(buffer, 0, buffer.Length);
   }
 
   public void Write(short value)
@@ -47,7 +53,6 @@ public class PostgresProtocolStream : MemoryStream
     var buffer = SerializerCore.Serialize(value);
     base.Write(buffer, 0, buffer.Length);
   }
-
 
   public void Write(int value)
   {
