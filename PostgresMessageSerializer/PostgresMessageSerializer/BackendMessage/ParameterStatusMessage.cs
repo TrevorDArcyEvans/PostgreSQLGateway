@@ -2,7 +2,7 @@ namespace PostgresMessageSerializer;
 
 public class ParameterStatusMessage : BackendMessage
 {
-  public static byte MessageTypeId = (byte)'S';
+  public static byte MessageTypeId = (byte) 'S';
 
   public string Name { get; set; }
 
@@ -10,12 +10,17 @@ public class ParameterStatusMessage : BackendMessage
 
   public override byte[] Serialize()
   {
-    throw new System.NotImplementedException();
+    using var buffer = new PostgresProtocolStream();
+
+    buffer.Write(Name);
+    buffer.Write(Value);
+
+    return buffer.ToArray();
   }
 
   public override void Deserialize(byte[] payload)
   {
-    var buffer = new PostgresProtocolStream(payload);
+    using var buffer = new PostgresProtocolStream(payload);
 
     Name = buffer.ReadString();
     Value = buffer.ReadString();
