@@ -61,35 +61,36 @@ internal class Program
 
     try
     {
-      // Start listening for incoming connections
-      listener.Start();
-      _logger.LogInformation("Listening for connections on port {0}...", port);
-
-
+      // ctrl-c in console to exit
       var isRunning = true;
       Console.CancelKeyPress += (sender, e) =>
       {
         isRunning = false;
         e.Cancel = true;
       };
+      _logger.LogInformation("Starting server - ctrl-c to stop...");
+
+      // start listening for incoming connections
+      listener.Start();
+      _logger.LogInformation("Listening for connections on port {0}...", port);
+
+      while (!listener.Pending())
+      {
+        Thread.Sleep(10);
+
+        if (!isRunning)
+        {
+          return;
+        }
+      }
+
+      // accept incoming connections
+      using var client = await listener.AcceptTcpClientAsync();
+      _logger.LogInformation("Connection accepted from {0}.", client.Client.RemoteEndPoint);
+      await using var stream = client.GetStream();
 
       while (isRunning)
       {
-        while (!listener.Pending())
-        {
-          Thread.Sleep(10);
-
-          if (!isRunning)
-          {
-            return;
-          }
-        }
-
-        // Accept incoming connections
-        using var client = await listener.AcceptTcpClientAsync();
-        _logger.LogInformation("Connection accepted from {0}.", client.Client.RemoteEndPoint);
-        await using var stream = client.GetStream();
-
         // receive data from the client
         var buffer = new byte[1024];
         var bytesRead = stream.Read(buffer, 0, buffer.Length);
@@ -99,24 +100,58 @@ internal class Program
         }
 
 
+        var receivedData = System.Text.Encoding.ASCII.GetString(buffer, 0, bytesRead);
+        _logger.LogInformation($"Received data from client: {receivedData}");
+
+        // grand central dispatch from here
+
         // TODO   check for SSL request et al
         var seq = new ReadOnlySequence<byte>(buffer[..bytesRead]);
         var reader = new SequenceReader<byte>(seq);
-        if (reader.TryReadBigEndian(out int length) && length == 8)
+        if (reader.TryReadBigEndian(out int length) && length >= 8)
         {
           if (reader.TryReadBigEndian(out int value))
           {
-            continue;
+            // SSL request
+            if (value == 80877103)
+            {
+              // SSL declined
+              stream.Write([(byte)'N']);
+              continue;
+            }
+
+            // startup request
+            if (value == 0x30000) // 196608
+            {
+              // authentication OK
+              stream.Write([
+                (byte)'R',
+                0x00, 0x00, 0x00, 0x08,
+                0x00, 0x00, 0x00, 0x00
+              ]);
+
+              // back end key
+              stream.Write([
+                (byte)'K',
+                0x00, 0x00, 0x00, 0x0c,
+                0x00, 0x00, 0x04, 0xd2,
+                0x00, 0x00, 0x16, 0x2e
+              ]);
+
+              // ready for query
+              stream.Write([
+                (byte)'Z',
+                0x00, 0x00, 0x00, 0x05,
+                (byte)'I' // transaction idle response
+              ]);
+
+              continue;
+            }
           }
         }
 
-
-        var msg = serialiser.Deserialize(buffer[0..bytesRead]);
-
-        var receivedData = System.Text.Encoding.ASCII.GetString(buffer, 0, bytesRead);
-        _logger.LogInformation("Received data from client: {0}", receivedData);
-
-        // grand central dispatch from here
+        // TODO   deserialise front end message
+        var msg = serialiser.Deserialize(buffer[..bytesRead]);
       }
     }
     catch (Exception ex)
