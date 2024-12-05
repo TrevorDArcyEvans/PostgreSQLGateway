@@ -1,10 +1,10 @@
-namespace PostgresMessageSerializer
-{
-    public class NoDataMessage : BackendMessage
-    {
-        public static byte MessageTypeId = (byte)'n';
+namespace PostgresMessageSerializer;
 
-        public override void Deserialize(byte[] payload)
-        { }
-    }
+public class NoDataMessage : BackendMessage
+{
+  public static byte MessageTypeId = (byte)'n';
+
+  public override void Deserialize(byte[] payload)
+  {
+  }
 }
