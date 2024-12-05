@@ -38,6 +38,7 @@ public class ParseMessage : FrontendMessage
 
   public override void Deserialize(byte[] payload)
   {
+    using var buffer = new PostgresProtocolStream(payload);
     throw new System.NotImplementedException();
   }
 }
