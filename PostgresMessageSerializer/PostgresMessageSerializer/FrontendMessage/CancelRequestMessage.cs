@@ -1,5 +1,7 @@
 namespace PostgresMessageSerializer;
 
+using System.Runtime.Serialization;
+
 public class CancelRequestMessage : FrontendMessage
 {
   public int Length { get; } = 16;
@@ -22,6 +24,18 @@ public class CancelRequestMessage : FrontendMessage
   public override void Deserialize(byte[] payload)
   {
     using var buffer = new PostgresProtocolStream(payload);
-    throw new System.NotImplementedException();
+
+    if (Length != buffer.ReadInt32())
+    {
+      throw new InvalidDataContractException("Invalid length");
+    }
+
+    if (CancelRequestCode != buffer.ReadInt32())
+    {
+      throw new InvalidDataContractException("Invalid cancel request code");
+    }
+
+    ProcessId = buffer.ReadInt32();
+    SecretKey = buffer.ReadInt32();
   }
 }
