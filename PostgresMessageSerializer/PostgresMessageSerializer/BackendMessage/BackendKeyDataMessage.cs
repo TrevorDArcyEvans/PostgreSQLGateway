@@ -10,7 +10,12 @@ public class BackendKeyDataMessage : BackendMessage
 
   public override byte[] Serialize()
   {
-    throw new System.NotImplementedException();
+    using var buffer = new PostgresProtocolStream();
+
+    buffer.Write(ProcessId);
+    buffer.Write(SecretKey);
+
+    return buffer.ToArray();
   }
 
   public override void Deserialize(byte[] payload)
