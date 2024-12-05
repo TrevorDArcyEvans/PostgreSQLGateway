@@ -68,7 +68,7 @@ public class Serializer_Test
     Assert.Equal(expect, serialized);
   }
 
-  class MockFrontendMessage : FrontendMessage
+  private class MockFrontendMessage : PostgresMessageSerializer.FrontendMessage
   {
     public static byte MessageTypeId = (byte)'0';
 
@@ -84,7 +84,7 @@ public class Serializer_Test
     }
   }
 
-  class MockBackendMessage : BackendMessage
+  private class MockBackendMessage : PostgresMessageSerializer.BackendMessage
   {
     public static byte MessageTypeId = (byte)'0';
 
