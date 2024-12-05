@@ -1,11 +1,10 @@
 namespace PostgresMessageSerializer;
 
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 public class StartupMessage : FrontendMessage
 {
-  public int ProtocolVersion { get; } = 196608; // 3, 0, 0, 0
+  public int ProtocolVersion { get; private set; } = 196608; // 3, 0, 0, 0
 
   public IList<StartupParameter> Parameters { get; } = new List<StartupParameter>();
 
@@ -28,16 +27,10 @@ public class StartupMessage : FrontendMessage
     return buffer.ToArray();
   }
 
-  public static StartupMessage Deserialize(byte[] buffer)
+  public void Deserialize(byte[] buffer)
   {
-    var retval = new StartupMessage();
-    var strm = new PostgresProtocolStream(buffer);
-    var protVer = strm.ReadInt32();
-
-    if (protVer != retval.ProtocolVersion)
-    {
-      throw new InvalidDataContractException($"Invalid protocol version: {protVer}");
-    }
+    using var strm = new PostgresProtocolStream(buffer);
+    ProtocolVersion = strm.ReadInt32();
 
     while (true)
     {
@@ -50,9 +43,7 @@ public class StartupMessage : FrontendMessage
 
       var value = strm.ReadString();
 
-      retval.Parameters.Add(new StartupParameter(name, value));
+      Parameters.Add(new StartupParameter(name, value));
     }
-
-    return retval;
   }
 }

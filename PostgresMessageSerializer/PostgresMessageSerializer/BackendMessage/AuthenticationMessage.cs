@@ -6,9 +6,18 @@ public class AuthenticationMessage : BackendMessage
 
   public int AuthResult { get; set; }
 
+  public byte[] Serialize()
+  {
+    var buffer = new PostgresProtocolStream();
+
+    buffer.Write(AuthResult);
+
+    return buffer.ToArray();
+  }
+
   public override void Deserialize(byte[] payload)
   {
-    var buffer = new PostgresProtocolStream(payload);
+    using var buffer = new PostgresProtocolStream(payload);
 
     AuthResult = buffer.ReadInt32();
   }

@@ -16,7 +16,8 @@ public class StartupMessage_Test
 
     // act
     var data = sut.Serialize();
-    var result = StartupMessage.Deserialize(data);
+    var result = new StartupMessage();
+    result.Deserialize(data);
 
     // assert
     result.Should().BeEquivalentTo(sut);
