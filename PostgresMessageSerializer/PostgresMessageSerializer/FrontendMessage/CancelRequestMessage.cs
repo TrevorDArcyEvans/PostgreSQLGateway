@@ -9,7 +9,7 @@ public class CancelRequestMessage : FrontendMessage
 
   public override byte[] Serialize()
   {
-    var buffer = new PostgresProtocolStream();
+    using var buffer = new PostgresProtocolStream();
 
     buffer.Write(Length);
     buffer.Write(CancelRequestCode);

@@ -10,7 +10,7 @@ public class ExecuteMessage : FrontendMessage
 
   public override byte[] Serialize()
   {
-    var buffer = new PostgresProtocolStream();
+    using var buffer = new PostgresProtocolStream();
 
     buffer.Write(PortalName);
     buffer.Write(Limit);

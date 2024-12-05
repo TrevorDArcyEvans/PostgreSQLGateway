@@ -22,7 +22,7 @@ public class ParseMessage : FrontendMessage
 
   public override byte[] Serialize()
   {
-    var buffer = new PostgresProtocolStream();
+    using var buffer = new PostgresProtocolStream();
 
     buffer.Write(PreparedStatementName);
     buffer.Write(Query);
