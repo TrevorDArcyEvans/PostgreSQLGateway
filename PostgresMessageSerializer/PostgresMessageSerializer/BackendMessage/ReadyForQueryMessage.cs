@@ -2,19 +2,23 @@ namespace PostgresMessageSerializer;
 
 public class ReadyForQueryMessage : BackendMessage
 {
-  public static byte MessageTypeId = (byte)'Z';
+  public static byte MessageTypeId = (byte) 'Z';
 
   public byte TransactionStatus { get; set; }
 
   public override byte[] Serialize()
   {
-    throw new System.NotImplementedException();
+    using var buffer = new PostgresProtocolStream();
+    
+    buffer.Write(TransactionStatus);
+
+    return buffer.ToArray();
   }
 
   public override void Deserialize(byte[] payload)
   {
-    var buffer = new PostgresProtocolStream(payload);
+    using var buffer = new PostgresProtocolStream(payload);
 
-    TransactionStatus = (byte)buffer.ReadByte();
+    TransactionStatus = (byte) buffer.ReadByte();
   }
 }
