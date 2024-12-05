@@ -4,24 +4,39 @@ using System.Collections.Generic;
 
 public class RowDescriptionMessage : BackendMessage
 {
-  public static byte MessageTypeId = (byte)'T';
+  public static byte MessageTypeId = (byte) 'T';
 
   public short FieldsCount { get; set; }
 
-  public IList<RowFieldDescription> RowFieldDescriptions { get; set; }
+  public IList<RowFieldDescription> RowFieldDescriptions { get; } = new List<RowFieldDescription>();
 
   public override byte[] Serialize()
   {
-    throw new System.NotImplementedException();
+    using var buffer = new PostgresProtocolStream();
+
+    buffer.Write(FieldsCount);
+
+    for (var i = 0; i < FieldsCount; i++)
+    {
+      var rowFieldDescr = RowFieldDescriptions[i];
+
+      buffer.Write(rowFieldDescr.FieldName);
+      buffer.Write(rowFieldDescr.TableOid);
+      buffer.Write(rowFieldDescr.RowAttributeId);
+      buffer.Write(rowFieldDescr.FieldTypeOid);
+      buffer.Write(rowFieldDescr.DataTypeSize);
+      buffer.Write(rowFieldDescr.TypeModifier);
+      buffer.Write(rowFieldDescr.FormatCode);
+    }
+
+    return buffer.ToArray();
   }
 
   public override void Deserialize(byte[] payload)
   {
-    var buffer = new PostgresProtocolStream(payload);
+    using var buffer = new PostgresProtocolStream(payload);
 
     FieldsCount = buffer.ReadInt16();
-
-    RowFieldDescriptions = new List<RowFieldDescription>();
 
     for (var i = 0; i < FieldsCount; i++)
     {
