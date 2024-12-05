@@ -18,7 +18,7 @@ public class BindMessage : FrontendMessage
     }
   }
 
-  public IList<short> ParameterFormatCodes { get; set; } = new List<short>(0);
+  public IList<short> ParameterFormatCodes { get; } = new List<short>(0);
 
   public short ParameterValueCount
   {

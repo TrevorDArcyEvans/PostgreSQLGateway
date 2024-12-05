@@ -12,7 +12,7 @@ public class ParseMessage : FrontendMessage
 
   public short ParameterDataTypeOidsCount => (short)ParameterDataTypeOids.Count;
 
-  public IList<int> ParameterDataTypeOids { get; set; } = new List<int>();
+  public IList<int> ParameterDataTypeOids { get; } = new List<int>();
 
   public override byte[] Serialize()
   {
