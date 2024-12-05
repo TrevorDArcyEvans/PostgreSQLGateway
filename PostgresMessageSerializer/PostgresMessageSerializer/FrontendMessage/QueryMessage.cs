@@ -1,18 +1,17 @@
-namespace PostgresMessageSerializer
+namespace PostgresMessageSerializer;
+
+public class QueryMessage : FrontendMessage
 {
-    public class QueryMessage : FrontendMessage
-    {
-        public static byte MessageTypeId = (byte)'Q';
+  public static byte MessageTypeId = (byte)'Q';
 
-        public string Query { get; set; }
+  public string Query { get; set; }
 
-        public override byte[] Serialize()
-        {
-            var buffer = new PostgresProtocolStream();
+  public override byte[] Serialize()
+  {
+    var buffer = new PostgresProtocolStream();
 
-            buffer.Write(Query);
+    buffer.Write(Query);
 
-            return buffer.ToArray();
-        }
-    }
+    return buffer.ToArray();
+  }
 }

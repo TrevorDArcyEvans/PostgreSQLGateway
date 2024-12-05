@@ -1,21 +1,20 @@
-namespace PostgresMessageSerializer
+namespace PostgresMessageSerializer;
+
+public class ExecuteMessage : FrontendMessage
 {
-    public class ExecuteMessage : FrontendMessage
-    {
-        public static byte MessageTypeId = (byte)'E';
+  public static byte MessageTypeId = (byte)'E';
 
-        public string PortalName { get; set; } = string.Empty;
+  public string PortalName { get; set; } = string.Empty;
 
-        public int Limit { get; set; }
+  public int Limit { get; set; }
 
-        public override byte[] Serialize()
-        {
-            var buffer = new PostgresProtocolStream();
+  public override byte[] Serialize()
+  {
+    var buffer = new PostgresProtocolStream();
 
-            buffer.Write(PortalName);
-            buffer.Write(Limit);
+    buffer.Write(PortalName);
+    buffer.Write(Limit);
 
-            return buffer.ToArray();
-        }
-    }
+    return buffer.ToArray();
+  }
 }

@@ -1,10 +1,10 @@
-namespace PostgresMessageSerializer
-{
-    public class PortalSuspendedMessage : BackendMessage
-    {
-        public static byte MessageTypeId = (byte)'s';
+namespace PostgresMessageSerializer;
 
-        public override void Deserialize(byte[] payload)
-        { }
-    }
+public class PortalSuspendedMessage : BackendMessage
+{
+  public static byte MessageTypeId = (byte)'s';
+
+  public override void Deserialize(byte[] payload)
+  {
+  }
 }

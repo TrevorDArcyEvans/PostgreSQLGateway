@@ -1,21 +1,20 @@
-namespace PostgresMessageSerializer
+namespace PostgresMessageSerializer;
+
+public class DescribeMessage : FrontendMessage
 {
-    public class DescribeMessage : FrontendMessage
-    {
-        public static byte MessageTypeId = (byte)'D';
+  public static byte MessageTypeId = (byte)'D';
 
-        public byte TargetType { get; set; }
+  public byte TargetType { get; set; }
 
-        public string TargetName { get; set; } = string.Empty;
+  public string TargetName { get; set; } = string.Empty;
 
-        public override byte[] Serialize()
-        {
-            var buffer = new PostgresProtocolStream();
+  public override byte[] Serialize()
+  {
+    var buffer = new PostgresProtocolStream();
 
-            buffer.WriteByte(TargetType);
-            buffer.Write(TargetName);
+    buffer.WriteByte(TargetType);
+    buffer.Write(TargetName);
 
-            return buffer.ToArray();
-        }
-    }
+    return buffer.ToArray();
+  }
 }

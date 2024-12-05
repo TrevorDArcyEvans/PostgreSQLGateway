@@ -1,10 +1,10 @@
-namespace PostgresMessageSerializer
-{
-    public class BindCompleteMessage : BackendMessage
-    {
-        public static byte MessageTypeId = (byte)'2';
+namespace PostgresMessageSerializer;
 
-        public override void Deserialize(byte[] payload)
-        { }
-    }
+public class BindCompleteMessage : BackendMessage
+{
+  public static byte MessageTypeId = (byte)'2';
+
+  public override void Deserialize(byte[] payload)
+  {
+  }
 }

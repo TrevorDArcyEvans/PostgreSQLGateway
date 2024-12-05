@@ -1,16 +1,15 @@
-namespace PostgresMessageSerializer
+namespace PostgresMessageSerializer;
+
+public class CommandCompleteMessage : BackendMessage
 {
-    public class CommandCompleteMessage : BackendMessage
-    {
-        public static byte MessageTypeId = (byte)'C';
+  public static byte MessageTypeId = (byte)'C';
 
-        public string CommandTag { get; set; }
+  public string CommandTag { get; set; }
 
-        public override void Deserialize(byte[] payload)
-        {
-            var buffer = new PostgresProtocolStream(payload);
+  public override void Deserialize(byte[] payload)
+  {
+    var buffer = new PostgresProtocolStream(payload);
 
-            CommandTag = buffer.ReadString();
-        }
-    }
+    CommandTag = buffer.ReadString();
+  }
 }

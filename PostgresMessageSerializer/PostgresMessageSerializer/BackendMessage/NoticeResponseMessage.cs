@@ -1,30 +1,32 @@
 using System.Collections.Generic;
 
-namespace PostgresMessageSerializer
+namespace PostgresMessageSerializer;
+
+public class NoticeResponseMessage : BackendMessage
 {
-    public class NoticeResponseMessage : BackendMessage
+  public static byte MessageTypeId = (byte)'N';
+
+  public IList<MessageField> Fields { get; set; }
+
+  public override void Deserialize(byte[] payload)
+  {
+    var buffer = new PostgresProtocolStream(payload);
+
+    Fields = new List<MessageField>();
+
+    while (true)
     {
-        public static byte MessageTypeId = (byte)'N';
+      var fieldId = (byte)buffer.ReadByte();
+      if (fieldId == '\0')
+      {
+        break;
+      }
 
-        public IList<MessageField> Fields { get; set; }
+      var messageField = new MessageField();
+      messageField.Id = fieldId;
+      messageField.Value = buffer.ReadString();
 
-        public override void Deserialize(byte[] payload)
-        {
-            var buffer = new PostgresProtocolStream(payload);
-
-            Fields = new List<MessageField>();
-
-            while (true)
-            {
-                var fieldId = (byte)buffer.ReadByte();
-                if (fieldId == '\0') break;
-
-                var messageField = new MessageField();
-                messageField.Id = fieldId;
-                messageField.Value = buffer.ReadString();
-
-                Fields.Add(messageField);
-            }
-        }
+      Fields.Add(messageField);
     }
+  }
 }
