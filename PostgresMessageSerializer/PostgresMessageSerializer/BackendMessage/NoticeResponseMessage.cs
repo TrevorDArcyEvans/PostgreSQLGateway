@@ -6,18 +6,26 @@ public class NoticeResponseMessage : BackendMessage
 {
   public static byte MessageTypeId = (byte)'N';
 
-  public IList<MessageField> Fields { get; set; }
+  public IList<MessageField> Fields { get; } = new List<MessageField>();
 
   public override byte[] Serialize()
   {
-    throw new System.NotImplementedException();
+    using var buffer = new PostgresProtocolStream();
+
+    for (var i = 0; i < Fields.Count; i++)
+    {
+      var msgField = Fields[i];
+      buffer.Write(msgField.Id);
+      buffer.Write(msgField.Value);
+    }
+    buffer.Write('\0');
+
+    return buffer.ToArray();
   }
 
   public override void Deserialize(byte[] payload)
   {
-    var buffer = new PostgresProtocolStream(payload);
-
-    Fields = new List<MessageField>();
+    using var buffer = new PostgresProtocolStream(payload);
 
     while (true)
     {
