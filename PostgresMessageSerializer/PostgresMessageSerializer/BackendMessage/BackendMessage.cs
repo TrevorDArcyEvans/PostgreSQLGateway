@@ -1,6 +1,5 @@
 namespace PostgresMessageSerializer;
 
-public abstract class BackendMessage
+public abstract class BackendMessage : Message
 {
-  public abstract void Deserialize(byte[] payload);
 }

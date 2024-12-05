@@ -1,6 +1,5 @@
 namespace PostgresMessageSerializer;
 
-public abstract class FrontendMessage
+public abstract class FrontendMessage : Message
 {
-  public abstract byte[] Serialize();
 }

@@ -68,7 +68,7 @@ public class Serializer_Test
     Assert.Equal(expect, serialized);
   }
 
-  private class MockFrontendMessage : PostgresMessageSerializer.FrontendMessage
+  private class MockFrontendMessage : FrontendMessage
   {
     public static byte MessageTypeId = (byte)'0';
 
@@ -82,13 +82,23 @@ public class Serializer_Test
 
       return buffer.ToArray();
     }
+
+    public override void Deserialize(byte[] payload)
+    {
+      throw new NotImplementedException();
+    }
   }
 
-  private class MockBackendMessage : PostgresMessageSerializer.BackendMessage
+  private class MockBackendMessage : BackendMessage
   {
     public static byte MessageTypeId = (byte)'0';
 
     public string PropertyString { get; set; }
+
+    public override byte[] Serialize()
+    {
+      throw new NotImplementedException();
+    }
 
     public override void Deserialize(byte[] payload)
     {

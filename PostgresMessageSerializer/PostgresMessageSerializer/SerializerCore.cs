@@ -44,6 +44,6 @@ internal static class SerializerCore
 
   internal static byte[] Serialize(byte value)
   {
-    return new[] { value };
+    return [value];
   }
 }

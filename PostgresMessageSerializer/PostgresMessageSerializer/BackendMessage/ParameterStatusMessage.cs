@@ -8,6 +8,11 @@ public class ParameterStatusMessage : BackendMessage
 
   public string Value { get; set; }
 
+  public override byte[] Serialize()
+  {
+    throw new System.NotImplementedException();
+  }
+
   public override void Deserialize(byte[] payload)
   {
     var buffer = new PostgresProtocolStream(payload);

@@ -17,4 +17,9 @@ public class DescribeMessage : FrontendMessage
 
     return buffer.ToArray();
   }
+
+  public override void Deserialize(byte[] payload)
+  {
+    throw new System.NotImplementedException();
+  }
 }

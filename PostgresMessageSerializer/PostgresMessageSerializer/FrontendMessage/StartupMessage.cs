@@ -27,7 +27,7 @@ public class StartupMessage : FrontendMessage
     return buffer.ToArray();
   }
 
-  public void Deserialize(byte[] buffer)
+  public override void Deserialize(byte[] buffer)
   {
     using var strm = new PostgresProtocolStream(buffer);
     ProtocolVersion = strm.ReadInt32();

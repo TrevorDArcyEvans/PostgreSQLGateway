@@ -1,6 +1,6 @@
-using System.Collections.Generic;
-
 namespace PostgresMessageSerializer;
+
+using System.Collections.Generic;
 
 public class RowDescriptionMessage : BackendMessage
 {
@@ -9,6 +9,11 @@ public class RowDescriptionMessage : BackendMessage
   public short FieldsCount { get; set; }
 
   public IList<RowFieldDescription> RowFieldDescriptions { get; set; }
+
+  public override byte[] Serialize()
+  {
+    throw new System.NotImplementedException();
+  }
 
   public override void Deserialize(byte[] payload)
   {

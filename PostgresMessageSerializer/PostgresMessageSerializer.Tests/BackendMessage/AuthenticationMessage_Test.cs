@@ -1,4 +1,4 @@
-namespace PostgresMessageSerializer.Tests.BackendMessage;
+namespace PostgresMessageSerializer.Tests;
 
 using FluentAssertions;
 using Xunit;

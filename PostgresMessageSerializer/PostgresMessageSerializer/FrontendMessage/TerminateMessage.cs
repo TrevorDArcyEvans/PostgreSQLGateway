@@ -6,6 +6,10 @@ public class TerminateMessage : FrontendMessage
 
   public override byte[] Serialize()
   {
-    return new byte[] { };
+    return [];
+  }
+
+  public override void Deserialize(byte[] payload)
+  {
   }
 }

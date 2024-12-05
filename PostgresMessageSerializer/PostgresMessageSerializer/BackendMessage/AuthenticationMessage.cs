@@ -6,7 +6,7 @@ public class AuthenticationMessage : BackendMessage
 
   public int AuthResult { get; set; }
 
-  public byte[] Serialize()
+  public override byte[] Serialize()
   {
     var buffer = new PostgresProtocolStream();
 
