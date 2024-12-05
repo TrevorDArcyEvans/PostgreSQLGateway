@@ -2,7 +2,7 @@ namespace PostgresMessageSerializer;
 
 public class ExecuteMessage : FrontendMessage
 {
-  public static byte MessageTypeId = (byte)'E';
+  public static byte MessageTypeId = (byte) 'E';
 
   public string PortalName { get; set; } = string.Empty;
 
@@ -21,6 +21,8 @@ public class ExecuteMessage : FrontendMessage
   public override void Deserialize(byte[] payload)
   {
     using var buffer = new PostgresProtocolStream(payload);
-    throw new System.NotImplementedException();
+
+    PortalName = buffer.ReadString();
+    Limit = buffer.ReadInt32();
   }
 }

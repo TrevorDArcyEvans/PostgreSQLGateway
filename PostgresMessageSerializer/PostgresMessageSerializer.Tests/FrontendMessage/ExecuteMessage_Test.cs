@@ -1,15 +1,23 @@
 namespace PostgresMessageSerializer.Tests;
 
+using System;
 using FluentAssertions;
 using Xunit;
 
 public class ExecuteMessage_Test
 {
-  [Fact]
-  public void Serialize_Deserialize_roundtrip()
+  [Theory]
+  [InlineData(21)]
+  [InlineData(0)]
+  [InlineData(-111)]
+  public void Serialize_Deserialize_roundtrip(int limit)
   {
     // arrange
-    var sut = new ExecuteMessage();
+    var sut = new ExecuteMessage
+    {
+      Limit = limit,
+      PortalName = Guid.NewGuid().ToString(),
+    };
 
     // act
     var data = sut.Serialize();
