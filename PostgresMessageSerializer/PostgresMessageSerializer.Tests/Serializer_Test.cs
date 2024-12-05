@@ -1,10 +1,10 @@
+namespace PostgresMessageSerializer.Tests;
+
 using System;
 using System.IO;
 using Xunit;
 
-namespace PostgresMessageSerializer.Tests;
-
-public class SerializerTest
+public class Serializer_Test
 {
   [Fact]
   public void Deserialize_PostgresProtocolBytes_ToBackendMessage()
@@ -14,14 +14,14 @@ public class SerializerTest
     {
       MockBackendMessage.MessageTypeId,
       0, 0, 0, 9, // message size (including this property)
-      (byte) 't', (byte) 'e', (byte) 's', (byte) 't', 0, // 'test'(encoded utf-8) + 0(end of string)
+      (byte)'t', (byte)'e', (byte)'s', (byte)'t', 0, // 'test'(encoded utf-8) + 0(end of string)
     };
 
     var serializer = new Serializer();
     serializer.CustomTypes.Add(typeof(MockBackendMessage));
 
     // act
-    var message = (MockBackendMessage) serializer.Deserialize(new MemoryStream(bytes));
+    var message = (MockBackendMessage)serializer.Deserialize(new MemoryStream(bytes));
 
     // assert
     Assert.Equal("test", message.PropertyString);
@@ -35,7 +35,7 @@ public class SerializerTest
     {
       MockBackendMessage.MessageTypeId,
       0, 0, 0, 2, // invalid message size
-      (byte) 'a'
+      (byte)'a'
     };
 
     var serializer = new Serializer();
@@ -63,14 +63,14 @@ public class SerializerTest
     {
       MockFrontendMessage.MessageTypeId,
       0, 0, 0, 9, // message size (including itself)
-      (byte) 't', (byte) 'e', (byte) 's', (byte) 't', 0, // 'test'(encoded utf-8) + 0(end of string)
+      (byte)'t', (byte)'e', (byte)'s', (byte)'t', 0, // 'test'(encoded utf-8) + 0(end of string)
     };
     Assert.Equal(expect, serialized);
   }
 
   class MockFrontendMessage : FrontendMessage
   {
-    public static byte MessageTypeId = (byte) '0';
+    public static byte MessageTypeId = (byte)'0';
 
     public string PropertyString { get; set; }
 
@@ -86,7 +86,7 @@ public class SerializerTest
 
   class MockBackendMessage : BackendMessage
   {
-    public static byte MessageTypeId = (byte) '0';
+    public static byte MessageTypeId = (byte)'0';
 
     public string PropertyString { get; set; }
 

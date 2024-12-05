@@ -1,14 +1,14 @@
-using Xunit;
-
 namespace PostgresMessageSerializer.Tests;
 
-public class PostgresProtocolStreamTest
+using Xunit;
+
+public class PostgresProtocolStream_Test
 {
   [Fact]
   public void ReadInt16_PostgresProtocolBytes_ToInt16()
   {
     // arrange
-    var test = new byte[] {39, 16}; // 39 * 256 + 16 = 10000
+    var test = new byte[] { 39, 16 }; // 39 * 256 + 16 = 10000
     var stream = new PostgresProtocolStream(test);
 
     // act
@@ -22,7 +22,7 @@ public class PostgresProtocolStreamTest
   public void ReadInt32_PostgresProtocolBytes_ToInt32()
   {
     // arrange
-    var test = new byte[] {0, 0, 39, 16}; // 39 * 256 + 16 = 10000
+    var test = new byte[] { 0, 0, 39, 16 }; // 39 * 256 + 16 = 10000
     var stream = new PostgresProtocolStream(test);
 
     // act
@@ -36,7 +36,7 @@ public class PostgresProtocolStreamTest
   public void ReadString_PostgresProtocolBytes_ToString()
   {
     // arrange
-    var bytes = new byte[] {(byte) 't', (byte) 'e', (byte) 's', (byte) 't', 0};
+    var bytes = new byte[] { (byte)'t', (byte)'e', (byte)'s', (byte)'t', 0 };
     var stream = new PostgresProtocolStream(bytes);
 
     // act
@@ -59,7 +59,7 @@ public class PostgresProtocolStreamTest
     stream.Read(result, 0, 5);
 
     // assert
-    var expect = new byte[] {(byte) 't', (byte) 'e', (byte) 's', (byte) 't', 0};
+    var expect = new byte[] { (byte)'t', (byte)'e', (byte)'s', (byte)'t', 0 };
     Assert.Equal(expect, result);
   }
 
@@ -76,7 +76,7 @@ public class PostgresProtocolStreamTest
     stream.Read(result, 0, sizeof(int));
 
     // assert
-    var expected = new byte[] {0, 0, 39, 16};
+    var expected = new byte[] { 0, 0, 39, 16 };
     Assert.Equal(expected, result);
   }
 
@@ -85,7 +85,7 @@ public class PostgresProtocolStreamTest
   {
     // arrange
     var stream = new PostgresProtocolStream();
-    stream.Write((short) (39 * 256 + 16)); // 10000
+    stream.Write((short)(39 * 256 + 16)); // 10000
     stream.Position = 0;
 
     // act
@@ -93,7 +93,7 @@ public class PostgresProtocolStreamTest
     stream.Read(result, 0, sizeof(short));
 
     // assert
-    var expected = new byte[] {39, 16};
+    var expected = new byte[] { 39, 16 };
     Assert.Equal(expected, result);
   }
 }
