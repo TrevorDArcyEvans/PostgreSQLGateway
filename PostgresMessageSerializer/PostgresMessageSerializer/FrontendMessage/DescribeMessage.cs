@@ -2,7 +2,7 @@ namespace PostgresMessageSerializer;
 
 public class DescribeMessage : FrontendMessage
 {
-  public static byte MessageTypeId = (byte)'D';
+  public static byte MessageTypeId = (byte) 'D';
 
   public byte TargetType { get; set; }
 
@@ -21,6 +21,8 @@ public class DescribeMessage : FrontendMessage
   public override void Deserialize(byte[] payload)
   {
     using var buffer = new PostgresProtocolStream(payload);
-    throw new System.NotImplementedException();
+
+    TargetType = (byte) buffer.ReadByte();
+    TargetName = buffer.ReadString();
   }
 }
