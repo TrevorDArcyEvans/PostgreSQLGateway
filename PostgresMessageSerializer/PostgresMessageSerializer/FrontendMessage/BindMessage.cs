@@ -10,25 +10,13 @@ public class BindMessage : FrontendMessage
 
   public string PreparedStatementName { get; set; } = string.Empty;
 
-  public short ParameterFormatCodeCount
-  {
-    get
-    {
-      return (short)ParameterFormatCodes.Count;
-    }
-  }
+  public short ParameterFormatCodeCount => (short)ParameterFormatCodes.Count;
 
   public IList<short> ParameterFormatCodes { get; } = new List<short>(0);
 
-  public short ParameterValueCount
-  {
-    get
-    {
-      return (short)ParameterValues.Count;
-    }
-  }
+  public short ParameterValueCount => (short)ParameterValues.Count;
 
-  public IList<Parameter> ParameterValues { get; set; } = new List<Parameter>();
+  public IList<Parameter> ParameterValues { get; } = new List<Parameter>();
 
   public short RowFormatCode { get; set; } = 0;
 
@@ -61,6 +49,31 @@ public class BindMessage : FrontendMessage
   public override void Deserialize(byte[] payload)
   {
     using var buffer = new PostgresProtocolStream(payload);
-    throw new System.NotImplementedException();
+
+    PortalName = buffer.ReadString();
+    PreparedStatementName = buffer.ReadString();
+
+    var paramFmtCodes = buffer.ReadInt16();
+    for (var i = 0; i < paramFmtCodes; i++)
+    {
+      ParameterFormatCodes.Add(buffer.ReadInt16());
+    }
+
+    var paramVals = buffer.ReadInt16();
+    for (var i = 0; i < paramVals; i++)
+    {
+      var length = buffer.ReadInt32();
+      var values = new List<byte>(length);
+      for (var j = 0; j < length; j++)
+      {
+        values.Add((byte)buffer.ReadByte());
+      }
+
+      var param = new Parameter
+      {
+        Value = values.ToArray()
+      };
+      ParameterValues.Add(param);
+    }
   }
 }
