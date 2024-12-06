@@ -28,13 +28,13 @@ public class Serializer
     return buffer.ToArray();
   }
 
-  public BackendMessage Deserialize(byte[] bytes)
+  public Message Deserialize(byte[] bytes)
   {
     var stream = new MemoryStream(bytes);
     return Deserialize(stream);
   }
 
-  public BackendMessage Deserialize(Stream stream)
+  public Message Deserialize(Stream stream)
   {
     var messageTypeId = (byte)stream.ReadByte();
 
@@ -80,9 +80,9 @@ public class Serializer
     return Deserialize(payload, messageType);
   }
 
-  public static BackendMessage Deserialize(byte[] payload, Type type)
+  public static Message Deserialize(byte[] payload, Type type)
   {
-    var message = (BackendMessage)Activator.CreateInstance(type);
+    var message = (Message)Activator.CreateInstance(type);
     message.Deserialize(payload);
     return message;
   }
