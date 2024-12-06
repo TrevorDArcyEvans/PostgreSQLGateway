@@ -115,7 +115,7 @@ internal class Program
           if (reader.TryReadBigEndian(out int value))
           {
             // SSL request
-            if (value == 80877103)
+            if (value == SSLRequestMessage.SSLRequestMessageId)
             {
               // SSL declined
               stream.Write([(byte)'N']);
