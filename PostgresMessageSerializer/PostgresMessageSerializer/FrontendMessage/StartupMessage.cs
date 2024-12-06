@@ -1,16 +1,17 @@
 namespace PostgresMessageSerializer;
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 public class StartupMessage : FrontendMessage
 {
   public override byte MessageTypeId => 1;
 
-  public int ProtocolVersion { get; private set; } = 196608; // 3, 0, 0, 0
+  public static int ProtocolVersion { get; } = 196608; // 0x30000
 
   public IList<StartupParameter> Parameters { get; } = new List<StartupParameter>();
 
-  public byte EndMessage { get; } = (byte)0;
+  private byte EndMessage { get; } = (byte)0;
 
   public override byte[] Serialize()
   {
@@ -32,7 +33,12 @@ public class StartupMessage : FrontendMessage
   public override void Deserialize(byte[] buffer)
   {
     using var strm = new PostgresProtocolStream(buffer);
-    ProtocolVersion = strm.ReadInt32();
+
+    var protVer = strm.ReadInt32();
+    if (protVer != ProtocolVersion)
+    {
+      throw new InvalidDataContractException($"Invalid protocol version: {protVer}");
+    }
 
     while (true)
     {

@@ -1,4 +1,6 @@
-﻿namespace PostgreSQLGateway;
+﻿using System.Diagnostics;
+
+namespace PostgreSQLGateway;
 
 using System.Buffers;
 using System.Net;
@@ -121,29 +123,26 @@ internal class Program
             }
 
             // startup request
-            if (value == 0x30000) // 196608
+            if (value == StartupMessage.ProtocolVersion)
             {
               // authentication OK
-              stream.Write([
-                (byte)'R',
-                0x00, 0x00, 0x00, 0x08,
-                0x00, 0x00, 0x00, 0x00
-              ]);
+              var authOk = new AuthenticationMessage();
+              stream.Write(Serializer.Serialize(authOk));
 
               // back end key
-              stream.Write([
-                (byte)'K',
-                0x00, 0x00, 0x00, 0x0c,
-                0x00, 0x00, 0x04, 0xd2,
-                0x00, 0x00, 0x16, 0x2e
-              ]);
+              var keyData = new BackendKeyDataMessage
+              {
+                ProcessId = Environment.ProcessId,
+                SecretKey = Random.Shared.Next()
+              };
+              stream.Write(Serializer.Serialize(keyData));
 
               // ready for query
-              stream.Write([
-                (byte)'Z',
-                0x00, 0x00, 0x00, 0x05,
-                (byte)'I' // transaction idle response
-              ]);
+              var ready = new ReadyForQueryMessage
+              {
+                TransactionStatus = (byte)'I' // transaction idle response
+              };
+              stream.Write(Serializer.Serialize(ready));
 
               continue;
             }
