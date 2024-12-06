@@ -8,21 +8,20 @@ using System.Reflection;
 
 public class Serializer
 {
-  private static Dictionary<byte, Type> _frontEndMsgTypeIdToTypeMap = new();
-  private static Dictionary<byte, Type> _backEndMsgTypeIdToTypeMap = new();
+  private static readonly Dictionary<byte, Type> _frontEndMsgTypeIdToTypeMap = new();
+  private static readonly Dictionary<byte, Type> _backEndMsgTypeIdToTypeMap = new();
 
   static Serializer()
   {
     var msgTypes = Assembly
       .GetExecutingAssembly()
       .GetTypes()
-      .ToList()
       .Where(x =>
         x.BaseType == typeof(FrontendMessage) ||
         x.BaseType == typeof(BackendMessage));
     foreach (var msgType in msgTypes)
     {
-      var message = (Message)Activator.CreateInstance(msgType);
+      var message = (Message) Activator.CreateInstance(msgType);
 
       if (msgType.BaseType == typeof(FrontendMessage))
       {
@@ -48,23 +47,25 @@ public class Serializer
     return buffer.ToArray();
   }
 
-  public static Message Deserialize(byte[] bytes)
+  public static Message DeserializeFrontEnd(byte[] bytes)
   {
     var stream = new MemoryStream(bytes);
-    return Deserialize(stream);
+    return Deserialize(stream, _frontEndMsgTypeIdToTypeMap);
   }
 
-  private static Message Deserialize(Stream stream)
+  public static Message DeserializeBackEnd(byte[] bytes)
   {
-    var messageTypeId = (byte)stream.ReadByte();
+    var stream = new MemoryStream(bytes);
+    return Deserialize(stream, _backEndMsgTypeIdToTypeMap);
+  }
 
-    // prioritise front end messages since that is what we will be receiving
-    if (!_frontEndMsgTypeIdToTypeMap.TryGetValue(messageTypeId, out var messageType))
+  private static Message Deserialize(MemoryStream stream, Dictionary<byte, Type> messageTypeMap)
+  {
+    var messageTypeId = (byte) stream.ReadByte();
+
+    if (!messageTypeMap.TryGetValue(messageTypeId, out var messageType))
     {
-      if (!_backEndMsgTypeIdToTypeMap.TryGetValue(messageTypeId, out messageType))
-      {
-        throw new ArgumentException($"invalid message type: {messageTypeId}", nameof(stream));
-      }
+      throw new ArgumentException($"invalid message type: {messageTypeId}", nameof(stream));
     }
 
     var payloadSizeField = new byte[sizeof(int)];
@@ -84,7 +85,7 @@ public class Serializer
       throw new ArgumentException("invalid payload size", nameof(stream));
     }
 
-    var message = (Message)Activator.CreateInstance(messageType);
+    var message = (Message) Activator.CreateInstance(messageType);
     message.Deserialize(payload);
     return message;
   }

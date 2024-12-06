@@ -1,24 +1,63 @@
 namespace PostgresMessageSerializer.Tests;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using FluentAssertions;
 using Xunit;
 
 public class Serializer_Test
 {
   [Theory]
-  [InlineData(typeof(AuthenticationMessage))]
-  [InlineData(typeof(BackendKeyDataMessage))]
-  public void Serialize_Deserialize_roundtrip(Type msgType)
+  [MemberData(nameof(FrontEndMessageTypes))]
+  public void DeserializeFrontEnd_roundtrip(Type msgType)
   {
     // arrange
-    var message1 = (Message)Activator.CreateInstance(msgType);
-    var data = Serializer.Serialize(message1);
+    var original = (Message) Activator.CreateInstance(msgType);
+    var data = Serializer.Serialize(original);
 
     // act
-    var message2 = (Message)Serializer.Deserialize(data);
+    var copy = Serializer.DeserializeFrontEnd(data);
 
     // assert
-    message1.Should().BeEquivalentTo(message2, options => options.RespectingRuntimeTypes());
+    original.Should().BeEquivalentTo(copy, options => options.RespectingRuntimeTypes());
+  }
+
+  [Theory]
+  [MemberData(nameof(BackEndMessageTypes))]
+  public void DeserializeBackEnd_roundtrip(Type msgType)
+  {
+    // arrange
+    var original = (Message) Activator.CreateInstance(msgType);
+    var data = Serializer.Serialize(original);
+
+    // act
+    var copy = Serializer.DeserializeBackEnd(data);
+
+    // assert
+    original.Should().BeEquivalentTo(copy, options => options.RespectingRuntimeTypes());
+  }
+
+  public static IEnumerable<object[]> FrontEndMessageTypes()
+  {
+    var msgTypes = Assembly.Load("PostgresMessageSerializer")
+      .GetTypes()
+      .Where(x => x.BaseType == typeof(FrontendMessage));
+    foreach (var msgType in msgTypes)
+    {
+      yield return [msgType];
+    }
+  }
+
+  public static IEnumerable<object[]> BackEndMessageTypes()
+  {
+    var msgTypes = Assembly.Load("PostgresMessageSerializer")
+      .GetTypes()
+      .Where(x => x.BaseType == typeof(BackendMessage));
+    foreach (var msgType in msgTypes)
+    {
+      yield return [msgType];
+    }
   }
 }
