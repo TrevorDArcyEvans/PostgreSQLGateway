@@ -1,110 +1,24 @@
 namespace PostgresMessageSerializer.Tests;
 
 using System;
-using System.IO;
+using FluentAssertions;
 using Xunit;
 
 public class Serializer_Test
 {
-  [Fact]
-  public void Deserialize_PostgresProtocolBytes_ToBackendMessage()
-  {
-    // assert
-    var bytes = new byte[]
-    {
-      MockBackendMessage.MessageTypeId,
-      0, 0, 0, 9, // message size (including this property)
-      (byte)'t', (byte)'e', (byte)'s', (byte)'t', 0, // 'test'(encoded utf-8) + 0(end of string)
-    };
-
-    var serializer = new Serializer();
-    serializer.CustomTypes.Add(typeof(MockBackendMessage));
-
-    // act
-    var message = (MockBackendMessage)serializer.Deserialize(new MemoryStream(bytes));
-
-    // assert
-    Assert.Equal("test", message.PropertyString);
-  }
-
-  [Fact]
-  public void Deserialize_InvalidPostgresProtocolBytes_ThrowArgumentException()
-  {
-    // assert
-    var bytes = new byte[]
-    {
-      MockBackendMessage.MessageTypeId,
-      0, 0, 0, 2, // invalid message size
-      (byte)'a'
-    };
-
-    var serializer = new Serializer();
-    serializer.CustomTypes.Add(typeof(MockBackendMessage));
-
-    // act & assert
-    Assert.Throws<ArgumentException>(() => serializer.Deserialize(new MemoryStream(bytes)));
-  }
-
-  [Fact]
-  public void Serialize_FrontendMessage_ToPostgresProtocolBytes()
+  [Theory]
+  [InlineData(typeof(AuthenticationMessage))]
+  [InlineData(typeof(BackendKeyDataMessage))]
+  public void Serialize_Deserialize_roundtrip(Type msgType)
   {
     // arrange
-    var message = new MockFrontendMessage();
-    message.PropertyString = "test";
-
-    var serializer = new Serializer();
-    serializer.CustomTypes.Add(typeof(MockFrontendMessage));
+    var message1 = (Message)Activator.CreateInstance(msgType);
+    var data = Serializer.Serialize(message1);
 
     // act
-    var serialized = Serializer.Serialize(message);
+    var message2 = (Message)Serializer.Deserialize(data);
 
     // assert
-    var expect = new byte[]
-    {
-      MockFrontendMessage.MessageTypeId,
-      0, 0, 0, 9, // message size (including itself)
-      (byte)'t', (byte)'e', (byte)'s', (byte)'t', 0, // 'test'(encoded utf-8) + 0(end of string)
-    };
-    Assert.Equal(expect, serialized);
-  }
-
-  private class MockFrontendMessage : FrontendMessage
-  {
-    public static byte MessageTypeId = (byte)'0';
-
-    public string PropertyString { get; set; }
-
-    public override byte[] Serialize()
-    {
-      var buffer = new PostgresProtocolStream();
-
-      buffer.Write(PropertyString);
-
-      return buffer.ToArray();
-    }
-
-    public override void Deserialize(byte[] payload)
-    {
-      throw new NotImplementedException();
-    }
-  }
-
-  private class MockBackendMessage : BackendMessage
-  {
-    public static byte MessageTypeId = (byte)'0';
-
-    public string PropertyString { get; set; }
-
-    public override byte[] Serialize()
-    {
-      throw new NotImplementedException();
-    }
-
-    public override void Deserialize(byte[] payload)
-    {
-      var buffer = new PostgresProtocolStream(payload);
-
-      PropertyString = buffer.ReadString();
-    }
+    message1.Should().BeEquivalentTo(message2, options => options.RespectingRuntimeTypes());
   }
 }

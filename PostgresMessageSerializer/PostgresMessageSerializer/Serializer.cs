@@ -8,9 +8,35 @@ using System.Reflection;
 
 public class Serializer
 {
-  public IList<Type> CustomTypes { get; } = Assembly.GetExecutingAssembly().GetTypes().ToList();
+  private static Dictionary<byte, Type> _frontEndMsgTypeIdToTypeMap = new();
+  private static Dictionary<byte, Type> _backEndMsgTypeIdToTypeMap = new();
 
-  public static byte[] Serialize(FrontendMessage message)
+  static Serializer()
+  {
+    var customTypes = Assembly.GetExecutingAssembly().GetTypes().ToList();
+    foreach (var customType in customTypes)
+    {
+      var field = customType.GetField("MessageTypeId");
+      if (field == null)
+      {
+        continue;
+      }
+
+      var messageTypeId = (byte)field.GetValue(null);
+
+      if (customType.BaseType == typeof(FrontendMessage))
+      {
+        _frontEndMsgTypeIdToTypeMap.Add(messageTypeId, customType);
+      }
+
+      if (customType.BaseType == typeof(BackendMessage))
+      {
+        _backEndMsgTypeIdToTypeMap.Add(messageTypeId, customType);
+      }
+    }
+  }
+
+  public static byte[] Serialize(Message message)
   {
     var messageTypeId = message.GetType().GetField("MessageTypeId")?.GetValue(message);
     var payload = message.Serialize();
@@ -28,36 +54,23 @@ public class Serializer
     return buffer.ToArray();
   }
 
-  public Message Deserialize(byte[] bytes)
+  public static Message Deserialize(byte[] bytes)
   {
     var stream = new MemoryStream(bytes);
     return Deserialize(stream);
   }
 
-  public Message Deserialize(Stream stream)
+  private static Message Deserialize(Stream stream)
   {
     var messageTypeId = (byte)stream.ReadByte();
 
-    Type messageType = null;
-
-    foreach (var customType in CustomTypes)
+    // prioritise front end messages since that is what we will be receiving
+    if (!_frontEndMsgTypeIdToTypeMap.TryGetValue(messageTypeId, out var messageType))
     {
-      var field = customType.GetField("MessageTypeId");
-      if (field == null)
+      if (!_backEndMsgTypeIdToTypeMap.TryGetValue(messageTypeId, out messageType))
       {
-        continue;
+        throw new ArgumentException($"invalid message type: {messageTypeId}", nameof(stream));
       }
-
-      if ((byte)field.GetValue(null) == messageTypeId)
-      {
-        messageType = customType;
-        break;
-      }
-    }
-
-    if (messageType == null)
-    {
-      throw new ArgumentException("invalid message type", nameof(stream));
     }
 
     var payloadSizeField = new byte[sizeof(int)];
@@ -77,12 +90,7 @@ public class Serializer
       throw new ArgumentException("invalid payload size", nameof(stream));
     }
 
-    return Deserialize(payload, messageType);
-  }
-
-  public static Message Deserialize(byte[] payload, Type type)
-  {
-    var message = (Message)Activator.CreateInstance(type);
+    var message = (Message)Activator.CreateInstance(messageType);
     message.Deserialize(payload);
     return message;
   }

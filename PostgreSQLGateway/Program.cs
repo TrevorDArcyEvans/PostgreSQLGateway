@@ -151,7 +151,7 @@ internal class Program
         }
 
         // TODO   deserialise front end message
-        var msg = serialiser.Deserialize(buffer[..bytesRead]);
+        var msg = Serializer.Deserialize(buffer[..bytesRead]);
       }
     }
     catch (Exception ex)
