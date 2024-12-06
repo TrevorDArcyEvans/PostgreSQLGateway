@@ -6,7 +6,7 @@ public class RowDescriptionMessage : BackendMessage
 {
   public override byte MessageTypeId => (byte) 'T';
 
-  public short FieldsCount { get; set; }
+  public short FieldsCount => (short) RowFieldDescriptions.Count;
 
   public IList<RowFieldDescription> RowFieldDescriptions { get; } = new List<RowFieldDescription>();
 
@@ -36,9 +36,9 @@ public class RowDescriptionMessage : BackendMessage
   {
     using var buffer = new PostgresProtocolStream(payload);
 
-    FieldsCount = buffer.ReadInt16();
+    var fieldsCount = buffer.ReadInt16();
 
-    for (var i = 0; i < FieldsCount; i++)
+    for (var i = 0; i < fieldsCount; i++)
     {
       var rowFieldDescription = new RowFieldDescription
       {

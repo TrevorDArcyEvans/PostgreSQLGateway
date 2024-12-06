@@ -9,11 +9,8 @@ public class RowDescriptionMessage_Test
   public void Serialize_Deserialize_roundtrip()
   {
     // arrange
-    var sut = new RowDescriptionMessage
-    {
-      FieldsCount = 3
-    };
-    for (var i = 1; i <= sut.FieldsCount; i++)
+    var sut = new RowDescriptionMessage();
+    for (var i = 1; i <= 3; i++)
     {
       var rowFieldDescr = new RowFieldDescription
       {
