@@ -33,6 +33,14 @@ public class ParseMessage : FrontendMessage
   public override void Deserialize(byte[] payload)
   {
     using var buffer = new PostgresProtocolStream(payload);
-    throw new System.NotImplementedException();
+
+    PreparedStatementName = buffer.ReadString();
+    Query = buffer.ReadString();
+
+    var paramDataTypes = buffer.ReadInt16();
+    for (var i = 0; i < paramDataTypes; i++)
+    {
+      ParameterDataTypeOids.Add(buffer.ReadInt32());
+    }
   }
 }
