@@ -11,8 +11,7 @@ public class DataRowMessage_Test
   {
     // arrange
     var sut = new DataRowMessage();
-    sut.ColumnCount = 3;
-    for (var i = 1; i <= sut.ColumnCount; i++)
+    for (var i = 1; i <= 3; i++)
     {
       var rowField = new RowField();
       rowField.Length = 2 * i;

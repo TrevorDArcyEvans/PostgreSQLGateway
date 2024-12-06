@@ -6,7 +6,7 @@ public class DataRowMessage : BackendMessage
 {
   public override byte MessageTypeId => (byte)'D';
 
-  public short ColumnCount { get; set; }
+  public short ColumnCount => (short) Rows.Count;
   public IList<RowField> Rows { get; } = new List<RowField>();
 
   public override byte[] Serialize()
@@ -33,9 +33,9 @@ public class DataRowMessage : BackendMessage
   {
     using var buffer = new PostgresProtocolStream(payload);
 
-    ColumnCount = buffer.ReadInt16();
+    var columnCount = buffer.ReadInt16();
 
-    for (var i = 0; i < ColumnCount; i++)
+    for (var i = 0; i < columnCount; i++)
     {
       var rowField = new RowField();
       rowField.Length = buffer.ReadInt32();
