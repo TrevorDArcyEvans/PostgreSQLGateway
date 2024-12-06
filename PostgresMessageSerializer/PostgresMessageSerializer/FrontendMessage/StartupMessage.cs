@@ -7,7 +7,12 @@ public class StartupMessage : FrontendMessage
 {
   public override byte MessageTypeId => 1;
 
-  public static int ProtocolVersion { get; } = 196608; // 0x30000
+  /// <summary>
+  /// The protocol version number.
+  /// The most significant 16 bits are the major version number (3 for the protocol described here).
+  /// The least significant 16 bits are the minor version number (0 for the protocol described here).
+  /// </summary>
+  public static int ProtocolVersion { get; } = 0x30000; // 196608
 
   public IList<StartupParameter> Parameters { get; } = new List<StartupParameter>();
 

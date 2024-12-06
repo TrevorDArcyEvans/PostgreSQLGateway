@@ -7,7 +7,14 @@ public class CancelRequestMessage : FrontendMessage
   public override byte MessageTypeId => 0;
 
   public int Length { get; } = 16;
+
+  /// <summary>
+  /// The cancel request code.
+  /// The value is chosen to contain 1234 in the most significant 16 bits, and 5678 in the least significant 16 bits.
+  /// (To avoid confusion, this code must not be the same as any protocol version number.)
+  /// </summary>
   public int CancelRequestCode { get; } = 80877102;
+
   public int ProcessId { get; set; }
   public int SecretKey { get; set; }
 
