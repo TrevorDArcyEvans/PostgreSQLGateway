@@ -4,7 +4,7 @@ public class CommandCompleteMessage : BackendMessage
 {
   public override byte MessageTypeId => (byte)'C';
 
-  public string CommandTag { get; set; }
+  public string CommandTag { get; set; } = string.Empty;
 
   public override byte[] Serialize()
   {

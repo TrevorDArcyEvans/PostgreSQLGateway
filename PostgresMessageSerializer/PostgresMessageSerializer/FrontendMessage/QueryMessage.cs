@@ -4,7 +4,7 @@ public class QueryMessage : FrontendMessage
 {
   public override byte MessageTypeId => (byte)'Q';
 
-  public string Query { get; set; }
+  public string Query { get; set; } = string.Empty;
 
   public override byte[] Serialize()
   {

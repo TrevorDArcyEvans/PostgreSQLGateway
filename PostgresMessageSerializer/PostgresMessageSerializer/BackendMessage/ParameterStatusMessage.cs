@@ -4,9 +4,9 @@ public class ParameterStatusMessage : BackendMessage
 {
   public override byte MessageTypeId => (byte) 'S';
 
-  public string Name { get; set; }
+  public string Name { get; set; } = string.Empty;
 
-  public string Value { get; set; }
+  public string Value { get; set; } = string.Empty;
 
   public override byte[] Serialize()
   {
