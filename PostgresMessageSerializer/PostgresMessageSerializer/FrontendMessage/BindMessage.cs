@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class BindMessage : FrontendMessage
 {
-  public static byte MessageTypeId = (byte)'B';
+  public override byte MessageTypeId => (byte)'B';
 
   public string PortalName { get; set; } = string.Empty;
 

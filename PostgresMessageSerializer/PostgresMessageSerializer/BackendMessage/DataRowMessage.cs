@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class DataRowMessage : BackendMessage
 {
-  public static byte MessageTypeId = (byte)'D';
+  public override byte MessageTypeId => (byte)'D';
 
   public short ColumnCount { get; set; }
   public IList<RowField> Rows { get; } = new List<RowField>();

@@ -2,7 +2,7 @@ namespace PostgresMessageSerializer;
 
 public class BackendKeyDataMessage : BackendMessage
 {
-  public static byte MessageTypeId = (byte)'K';
+  public override byte MessageTypeId => (byte)'K';
 
   public int ProcessId { get; set; }
 

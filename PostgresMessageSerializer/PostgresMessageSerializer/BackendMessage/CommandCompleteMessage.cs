@@ -2,7 +2,7 @@ namespace PostgresMessageSerializer;
 
 public class CommandCompleteMessage : BackendMessage
 {
-  public static byte MessageTypeId = (byte)'C';
+  public override byte MessageTypeId => (byte)'C';
 
   public string CommandTag { get; set; }
 

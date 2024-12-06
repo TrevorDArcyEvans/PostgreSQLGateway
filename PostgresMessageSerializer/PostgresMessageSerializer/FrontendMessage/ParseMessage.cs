@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class ParseMessage : FrontendMessage
 {
-  public static byte MessageTypeId = (byte)'P';
+  public override byte MessageTypeId => (byte)'P';
 
   public string PreparedStatementName { get; set; } = string.Empty;
 

@@ -13,41 +13,35 @@ public class Serializer
 
   static Serializer()
   {
-    var customTypes = Assembly.GetExecutingAssembly().GetTypes().ToList();
-    foreach (var customType in customTypes)
+    var msgTypes = Assembly
+      .GetExecutingAssembly()
+      .GetTypes()
+      .ToList()
+      .Where(x =>
+        x.BaseType == typeof(FrontendMessage) ||
+        x.BaseType == typeof(BackendMessage));
+    foreach (var msgType in msgTypes)
     {
-      var field = customType.GetField("MessageTypeId");
-      if (field == null)
+      var message = (Message)Activator.CreateInstance(msgType);
+
+      if (msgType.BaseType == typeof(FrontendMessage))
       {
-        continue;
+        _frontEndMsgTypeIdToTypeMap.Add(message.MessageTypeId, msgType);
       }
 
-      var messageTypeId = (byte)field.GetValue(null);
-
-      if (customType.BaseType == typeof(FrontendMessage))
+      if (msgType.BaseType == typeof(BackendMessage))
       {
-        _frontEndMsgTypeIdToTypeMap.Add(messageTypeId, customType);
-      }
-
-      if (customType.BaseType == typeof(BackendMessage))
-      {
-        _backEndMsgTypeIdToTypeMap.Add(messageTypeId, customType);
+        _backEndMsgTypeIdToTypeMap.Add(message.MessageTypeId, msgType);
       }
     }
   }
 
   public static byte[] Serialize(Message message)
   {
-    var messageTypeId = message.GetType().GetField("MessageTypeId")?.GetValue(message);
+    var buffer = new List<byte>();
     var payload = message.Serialize();
 
-    var buffer = new List<byte>();
-
-    if (messageTypeId != null)
-    {
-      buffer.Add((byte)messageTypeId);
-    }
-
+    buffer.Add(message.MessageTypeId);
     buffer.AddRange(SerializerCore.Serialize(payload.Length + sizeof(int)));
     buffer.AddRange(payload);
 

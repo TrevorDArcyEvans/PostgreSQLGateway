@@ -2,7 +2,7 @@ namespace PostgresMessageSerializer;
 
 public class SyncMessage : FrontendMessage
 {
-  public static byte MessageTypeId = (byte)'S';
+  public override byte MessageTypeId => (byte)'S';
 
   public override byte[] Serialize()
   {

@@ -2,7 +2,7 @@ namespace PostgresMessageSerializer;
 
 public class ReadyForQueryMessage : BackendMessage
 {
-  public static byte MessageTypeId = (byte) 'Z';
+  public override byte MessageTypeId => (byte) 'Z';
 
   public byte TransactionStatus { get; set; }
 

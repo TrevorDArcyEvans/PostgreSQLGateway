@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class ErrorResponseMessage : BackendMessage
 {
-  public static byte MessageTypeId = (byte) 'E';
+  public override byte MessageTypeId => (byte) 'E';
 
   public IList<MessageField> Fields { get; } = new List<MessageField>();
 

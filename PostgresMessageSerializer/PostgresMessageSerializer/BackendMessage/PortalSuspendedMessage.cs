@@ -2,7 +2,7 @@ namespace PostgresMessageSerializer;
 
 public class PortalSuspendedMessage : BackendMessage
 {
-  public static byte MessageTypeId = (byte)'s';
+  public override byte MessageTypeId => (byte)'s';
 
   public override byte[] Serialize()
   {

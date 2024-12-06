@@ -2,7 +2,7 @@ namespace PostgresMessageSerializer;
 
 public class BindCompleteMessage : BackendMessage
 {
-  public static byte MessageTypeId = (byte)'2';
+  public override byte MessageTypeId => (byte)'2';
 
   public override byte[] Serialize()
   {

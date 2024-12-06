@@ -4,6 +4,8 @@ using System.Runtime.Serialization;
 
 public class CancelRequestMessage : FrontendMessage
 {
+  public override byte MessageTypeId => 0;
+
   public int Length { get; } = 16;
   public int CancelRequestCode { get; } = 80877102;
   public int ProcessId { get; set; }

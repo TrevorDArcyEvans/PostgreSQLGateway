@@ -2,7 +2,7 @@ namespace PostgresMessageSerializer;
 
 public class ParameterStatusMessage : BackendMessage
 {
-  public static byte MessageTypeId = (byte) 'S';
+  public override byte MessageTypeId => (byte) 'S';
 
   public string Name { get; set; }
 

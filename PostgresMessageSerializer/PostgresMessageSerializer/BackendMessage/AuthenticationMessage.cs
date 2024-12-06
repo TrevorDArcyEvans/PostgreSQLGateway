@@ -2,7 +2,7 @@ namespace PostgresMessageSerializer;
 
 public class AuthenticationMessage : BackendMessage
 {
-  public static byte MessageTypeId = (byte)'R';
+  public override byte MessageTypeId => (byte)'R';
 
   public int AuthResult { get; set; }
 

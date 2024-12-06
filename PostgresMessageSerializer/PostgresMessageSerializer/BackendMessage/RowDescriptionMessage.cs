@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class RowDescriptionMessage : BackendMessage
 {
-  public static byte MessageTypeId = (byte) 'T';
+  public override byte MessageTypeId => (byte) 'T';
 
   public short FieldsCount { get; set; }
 

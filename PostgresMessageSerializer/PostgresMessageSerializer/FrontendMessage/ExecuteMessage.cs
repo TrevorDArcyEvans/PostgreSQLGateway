@@ -2,7 +2,7 @@ namespace PostgresMessageSerializer;
 
 public class ExecuteMessage : FrontendMessage
 {
-  public static byte MessageTypeId = (byte) 'E';
+  public override byte MessageTypeId => (byte) 'E';
 
   public string PortalName { get; set; } = string.Empty;
 

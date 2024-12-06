@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class StartupMessage : FrontendMessage
 {
+  public override byte MessageTypeId => 1;
+
   public int ProtocolVersion { get; private set; } = 196608; // 3, 0, 0, 0
 
   public IList<StartupParameter> Parameters { get; } = new List<StartupParameter>();

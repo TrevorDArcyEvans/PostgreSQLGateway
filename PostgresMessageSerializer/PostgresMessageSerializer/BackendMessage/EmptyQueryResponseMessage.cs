@@ -2,7 +2,7 @@ namespace PostgresMessageSerializer;
 
 public class EmptyQueryResponseMessage : BackendMessage
 {
-  public static byte MessageTypeId = (byte)'I';
+  public override byte MessageTypeId => (byte)'I';
 
   public override byte[] Serialize()
   {

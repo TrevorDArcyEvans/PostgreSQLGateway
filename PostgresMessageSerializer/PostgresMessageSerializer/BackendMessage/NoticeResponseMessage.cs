@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class NoticeResponseMessage : BackendMessage
 {
-  public static byte MessageTypeId = (byte)'N';
+  public override byte MessageTypeId => (byte)'N';
 
   public IList<MessageField> Fields { get; } = new List<MessageField>();
 
