@@ -149,6 +149,10 @@ internal class Program
           case QueryMessage query:
             Process(stream, query);
             break;
+          
+          case TerminateMessage terminate:
+            isRunning = false;
+            break;
         }
       }
     }
