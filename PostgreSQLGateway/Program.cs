@@ -54,10 +54,6 @@ internal class Program
     // Create a TCP listener
     var listener = new TcpListener(ipAddress, port);
 
-
-    var serialiser = new Serializer();
-
-
     try
     {
       // ctrl-c in console to exit
@@ -146,8 +142,14 @@ internal class Program
           }
         }
 
-        // TODO   deserialise front end message
+        // deserialise front end message
         var msg = Serializer.DeserializeFrontEnd(buffer[..bytesRead]);
+        switch (msg)
+        {
+          case QueryMessage query:
+            Process(stream, query);
+            break;
+        }
       }
     }
     catch (Exception ex)
@@ -161,6 +163,76 @@ internal class Program
       // Stop listening for connections
       listener.Stop();
     }
+  }
+
+  private void Process(NetworkStream stream, QueryMessage query)
+  {
+    var rowDescr = new RowDescriptionMessage();
+    rowDescr.RowFieldDescriptions.Add(
+      new RowFieldDescription
+      {
+        FieldName = "Index",
+        TableOid = 1,
+        RowAttributeId = 0,
+        FieldTypeOid = 0,
+        DataTypeSize = 4,
+        TypeModifier = 0,
+        FormatCode = 1
+      });
+    rowDescr.RowFieldDescriptions.Add(
+      new RowFieldDescription
+      {
+        FieldName = "CustomerName",
+        TableOid = 1,
+        RowAttributeId = 0,
+        FieldTypeOid = 0,
+        DataTypeSize = -1,
+        TypeModifier = 0,
+        FormatCode = 1
+      });
+    stream.Write(Serializer.Serialize(rowDescr));
+
+
+    var dataRow = new DataRowMessage();
+
+    // index
+    var idxData = BitConverter.GetBytes(21).Reverse().ToArray();
+    var idx = new RowField
+    {
+      Length = idxData.Length,
+      Value = idxData
+    };
+    dataRow.Rows.Add(idx);
+
+    // customer name
+    var bytes = new List<byte>();
+
+    bytes.AddRange("Mr Jacob Rees-Mogg Esq"u8.ToArray());
+    bytes.Add(0);
+
+    var nameData = bytes.ToArray();
+    var name = new RowField
+    {
+      Length = nameData.Length,
+      Value = nameData
+    };
+    dataRow.Rows.Add(name);
+
+    stream.Write(Serializer.Serialize(dataRow));
+
+
+    var complete = new CommandCompleteMessage
+    {
+      CommandTag = 1.ToString()
+    };
+    stream.Write(Serializer.Serialize(complete));
+
+
+    var ready = new ReadyForQueryMessage
+    {
+      TransactionStatus = (byte)'I' // transaction idle response
+    };
+    stream.Write(Serializer.Serialize(ready));
   }
 
   private Task HandleParseError(IEnumerable<Error> errs)
