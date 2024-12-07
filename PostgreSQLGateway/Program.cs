@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace PostgreSQLGateway;
+﻿namespace PostgreSQLGateway;
 
 using System.Buffers;
 using System.Net;
@@ -9,7 +7,6 @@ using CommandLine;
 using PostgresMessageSerializer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 internal class Program
@@ -22,7 +19,7 @@ internal class Program
     await prog.Run(args);
   }
 
-  public Program(string[] args)
+  private Program(string[] args)
   {
     var builder = WebApplication.CreateBuilder(args);
     var app = builder.Build();
