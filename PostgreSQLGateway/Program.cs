@@ -176,7 +176,7 @@ internal class Program
         TableOid = 1,
         RowAttributeId = 0,
         FieldTypeOid = 0,
-        DataTypeSize = 4,
+        DataTypeSize = sizeof(int),
         TypeModifier = 0,
         FormatCode = 1
       });
