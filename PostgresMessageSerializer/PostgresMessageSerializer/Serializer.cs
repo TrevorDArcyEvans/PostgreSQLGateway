@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-public class Serializer
+public static class Serializer
 {
   private static readonly Dictionary<byte, Type> _frontEndMsgTypeIdToTypeMap = new();
   private static readonly Dictionary<byte, Type> _backEndMsgTypeIdToTypeMap = new();
