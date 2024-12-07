@@ -14,7 +14,6 @@ public class DataRowMessage_Test
     for (var i = 1; i <= 3; i++)
     {
       var rowField = new RowField();
-      rowField.Length = 2 * i;
 
       var rowValueBytes = new List<byte>(rowField.Length);
       for (var j = 1; j <= rowField.Length; j++)

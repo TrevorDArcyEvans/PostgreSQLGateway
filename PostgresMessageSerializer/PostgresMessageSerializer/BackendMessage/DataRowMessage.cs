@@ -38,10 +38,10 @@ public class DataRowMessage : BackendMessage
     for (var i = 0; i < columnCount; i++)
     {
       var rowField = new RowField();
-      rowField.Length = buffer.ReadInt32();
+      var rowFieldLen = buffer.ReadInt32();
 
       var rowValueBytes = new List<byte>();
-      for (var j = 0; j < rowField.Length; j++)
+      for (var j = 0; j < rowFieldLen; j++)
       {
         rowValueBytes.Add((byte)buffer.ReadByte());
       }

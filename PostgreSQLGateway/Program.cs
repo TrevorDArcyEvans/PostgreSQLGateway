@@ -199,7 +199,6 @@ internal class Program
     var idxData = BitConverter.GetBytes(21).Reverse().ToArray();
     var idx = new RowField
     {
-      Length = idxData.Length,
       Value = idxData
     };
     dataRow.Rows.Add(idx);
@@ -213,7 +212,6 @@ internal class Program
     var nameData = bytes.ToArray();
     var name = new RowField
     {
-      Length = nameData.Length,
       Value = nameData
     };
     dataRow.Rows.Add(name);
