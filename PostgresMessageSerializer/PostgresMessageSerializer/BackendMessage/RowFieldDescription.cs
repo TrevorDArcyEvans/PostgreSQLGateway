@@ -19,9 +19,9 @@ public class RowFieldDescription
   /// </summary>
   public short RowAttributeId { get; set; }
 
-    /// <summary>
-    /// The object ID of the field's data type.
-    /// </summary>
+  /// <summary>
+  /// The object ID of the field's data type.
+  /// </summary>
   public int FieldTypeOid { get; set; }
 
   /// <summary>
