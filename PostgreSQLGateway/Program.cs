@@ -131,10 +131,7 @@ internal class Program
               stream.Write(Serializer.Serialize(keyData));
 
               // ready for query
-              var ready = new ReadyForQueryMessage
-              {
-                TransactionStatus = (byte)'I' // transaction idle response
-              };
+              var ready = new ReadyForQueryMessage();
               stream.Write(Serializer.Serialize(ready));
 
               continue;
@@ -230,10 +227,7 @@ internal class Program
     stream.Write(Serializer.Serialize(complete));
 
 
-    var ready = new ReadyForQueryMessage
-    {
-      TransactionStatus = (byte)'I' // transaction idle response
-    };
+    var ready = new ReadyForQueryMessage();
     stream.Write(Serializer.Serialize(ready));
   }
 

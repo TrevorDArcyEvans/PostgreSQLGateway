@@ -4,7 +4,7 @@ public class ReadyForQueryMessage : BackendMessage
 {
   public override byte MessageTypeId => (byte) 'Z';
 
-  public byte TransactionStatus { get; set; }
+  public byte TransactionStatus { get; set; } = (byte)'I'; // transaction idle response
 
   public override byte[] Serialize()
   {
