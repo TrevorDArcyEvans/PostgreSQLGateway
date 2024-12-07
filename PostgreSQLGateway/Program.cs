@@ -197,23 +197,16 @@ internal class Program
     var dataRow = new DataRowMessage();
 
     // index
-    var idxData = BitConverter.GetBytes(21).Reverse().ToArray();
     var idx = new RowField
     {
-      Value = idxData
+      Value = SerializerCore.Serialize(21)
     };
     dataRow.Rows.Add(idx);
 
     // customer name
-    var bytes = new List<byte>();
-
-    bytes.AddRange("Mr Jacob Rees-Mogg Esq"u8.ToArray());
-    bytes.Add(0);
-
-    var nameData = bytes.ToArray();
     var name = new RowField
     {
-      Value = nameData
+      Value = SerializerCore.Serialize("Mr Jacob Rees-Mogg Esq")
     };
     dataRow.Rows.Add(name);
 
