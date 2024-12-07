@@ -41,7 +41,8 @@ public class Serializer_Test
 
   public static IEnumerable<object[]> FrontEndMessageTypes()
   {
-    var msgTypes = Assembly.Load("PostgresMessageSerializer")
+    var msgTypes = typeof(FrontendMessage)
+      .Assembly
       .GetTypes()
       .Where(x => x.BaseType == typeof(FrontendMessage));
     foreach (var msgType in msgTypes)
@@ -52,7 +53,8 @@ public class Serializer_Test
 
   public static IEnumerable<object[]> BackEndMessageTypes()
   {
-    var msgTypes = Assembly.Load("PostgresMessageSerializer")
+    var msgTypes = typeof(BackendMessage)
+      .Assembly
       .GetTypes()
       .Where(x => x.BaseType == typeof(BackendMessage));
     foreach (var msgType in msgTypes)
