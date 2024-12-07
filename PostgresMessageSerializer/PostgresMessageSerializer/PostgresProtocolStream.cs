@@ -33,10 +33,11 @@ public class PostgresProtocolStream : MemoryStream
   {
     var buffer = new List<byte>();
 
+    // look for null string terminator
     int b;
     while ((b = base.ReadByte()) != 0)
     {
-      buffer.Add((byte) b);
+      buffer.Add((byte)b);
     }
 
     return SerializerCore.DeserializeString(buffer.ToArray());
@@ -63,6 +64,10 @@ public class PostgresProtocolStream : MemoryStream
   public void Write(string value)
   {
     var buffer = SerializerCore.Serialize(value);
-    base.Write(buffer, 0, buffer.Length);
+
+    // add null string terminator
+    var bytes = new List<byte>(buffer) { 0 };
+
+    base.Write(bytes.ToArray(), 0, bytes.Count);
   }
 }

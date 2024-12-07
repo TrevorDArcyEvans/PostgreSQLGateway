@@ -5,44 +5,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-internal static class SerializerCore
+public static class SerializerCore
 {
-  internal static int DeserializeInt32(byte[] value)
+  public static int DeserializeInt32(byte[] value)
   {
     return BitConverter.ToInt32(value.Reverse().ToArray());
   }
 
-  internal static short DeserializeInt16(byte[] value)
+  public static short DeserializeInt16(byte[] value)
   {
     return BitConverter.ToInt16(value.Reverse().ToArray());
   }
 
-  internal static string DeserializeString(byte[] value)
+  public static string DeserializeString(byte[] value)
   {
     return Encoding.UTF8.GetString(value.ToArray());
   }
 
-  internal static byte[] Serialize(string value)
+  public static byte[] Serialize(string value)
   {
-    var bytes = new List<byte>();
-
-    bytes.AddRange(Encoding.UTF8.GetBytes(value));
-    bytes.Add(0);
-
-    return bytes.ToArray();
+    return Encoding.UTF8.GetBytes(value);
   }
 
-  internal static byte[] Serialize(int value)
+  public static byte[] Serialize(int value)
   {
     return BitConverter.GetBytes(value).Reverse().ToArray();
   }
 
-  internal static byte[] Serialize(short value)
+  public static byte[] Serialize(short value)
   {
     return BitConverter.GetBytes(value).Reverse().ToArray();
   }
 
-  internal static byte[] Serialize(byte value)
+  public static byte[] Serialize(byte value)
   {
     return [value];
   }
