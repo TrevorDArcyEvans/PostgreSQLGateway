@@ -41,6 +41,8 @@ passed directly to the custom query handler.
 
 <details>
 
+### Mandatory
+
 * .NET 9 SDK
 * git
 * [psql client](https://www.postgresguide.com/utilities/psql/)
@@ -48,6 +50,15 @@ passed directly to the custom query handler.
   ```bash
   sudo apt-get update
   sudo apt-get install postgresql-client
+  ```
+
+### Recommended
+
+* [DBeaver](https://dbeaver.io/)
+* Postgres
+  ```bash
+  docker pull postgres
+  docker run --name postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres
   ```
 
 </details>
