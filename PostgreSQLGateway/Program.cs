@@ -146,7 +146,7 @@ internal class Program
           case QueryMessage query:
             Process(stream, query);
             break;
-          
+
           case TerminateMessage terminate:
             isRunning = false;
             break;
@@ -172,24 +172,24 @@ internal class Program
     rowDescr.RowFieldDescriptions.Add(
       new RowFieldDescription
       {
-        FieldName = "Index",
-        TableOid = 1,
+        FieldName = "Id",
+        TableOid = 0,
         RowAttributeId = 0,
-        FieldTypeOid = 0,
+        FieldTypeOid = 23, // int32
         DataTypeSize = sizeof(int),
-        TypeModifier = 0,
-        FormatCode = 1
+        TypeModifier = -1,
+        FormatCode = 0
       });
     rowDescr.RowFieldDescriptions.Add(
       new RowFieldDescription
       {
-        FieldName = "CustomerName",
-        TableOid = 1,
+        FieldName = "Name",
+        TableOid = 0,
         RowAttributeId = 0,
-        FieldTypeOid = 0,
+        FieldTypeOid = 25, // string
         DataTypeSize = -1,
-        TypeModifier = 0,
-        FormatCode = 1
+        TypeModifier = -1,
+        FormatCode = 0
       });
     stream.Write(Serializer.Serialize(rowDescr));
 
@@ -199,7 +199,8 @@ internal class Program
     // index
     var idx = new RowField
     {
-      Value = SerializerCore.Serialize(21)
+      // WTF?  Have to serialise int32 as string
+      Value = SerializerCore.Serialize(21.ToString())
     };
     dataRow.Rows.Add(idx);
 
