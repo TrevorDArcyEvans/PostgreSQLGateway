@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgresMessageSerializer",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgresMessageSerializer.Tests", "PostgresMessageSerializer\PostgresMessageSerializer.Tests\PostgresMessageSerializer.Tests.csproj", "{CCFFB213-12B5-40E8-9A63-B4AABADDFB67}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgreSQLGateway.Test.CLI", "PostgreSQLGateway.Test.CLI\PostgreSQLGateway.Test.CLI.csproj", "{6D282EE8-6417-46C3-A918-0BE4A27C11E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{CCFFB213-12B5-40E8-9A63-B4AABADDFB67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCFFB213-12B5-40E8-9A63-B4AABADDFB67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCFFB213-12B5-40E8-9A63-B4AABADDFB67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D282EE8-6417-46C3-A918-0BE4A27C11E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D282EE8-6417-46C3-A918-0BE4A27C11E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D282EE8-6417-46C3-A918-0BE4A27C11E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D282EE8-6417-46C3-A918-0BE4A27C11E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
