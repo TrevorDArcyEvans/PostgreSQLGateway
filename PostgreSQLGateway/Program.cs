@@ -206,24 +206,47 @@ internal class Program
     stream.Write(Serializer.Serialize(rowDescr));
 
 
-    var dataRow = new DataRowMessage();
-
-    // index
-    var idx = new RowField
     {
-      // WTF?  Have to serialise int32 as string
-      Value = SerializerCore.Serialize(21.ToString())
-    };
-    dataRow.Rows.Add(idx);
+      var dataRow = new DataRowMessage();
 
-    // customer name
-    var name = new RowField
+      // index
+      var idx = new RowField
+      {
+        // WTF?  Have to serialise int32 as string
+        Value = SerializerCore.Serialize(21.ToString())
+      };
+      dataRow.Rows.Add(idx);
+
+      // customer name
+      var name = new RowField
+      {
+        Value = SerializerCore.Serialize("Mr Jacob Rees-Mogg Esq")
+      };
+      dataRow.Rows.Add(name);
+
+      stream.Write(Serializer.Serialize(dataRow));
+    }
+
     {
-      Value = SerializerCore.Serialize("Mr Jacob Rees-Mogg Esq")
-    };
-    dataRow.Rows.Add(name);
+      var dataRow = new DataRowMessage();
 
-    stream.Write(Serializer.Serialize(dataRow));
+      // index
+      var idx = new RowField
+      {
+        // WTF?  Have to serialise int32 as string
+        Value = SerializerCore.Serialize(23.ToString())
+      };
+      dataRow.Rows.Add(idx);
+
+      // customer name
+      var name = new RowField
+      {
+        Value = SerializerCore.Serialize("Rishi Sunak")
+      };
+      dataRow.Rows.Add(name);
+
+      stream.Write(Serializer.Serialize(dataRow));
+    }
 
 
     var complete = new CommandCompleteMessage
