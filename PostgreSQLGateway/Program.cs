@@ -52,7 +52,7 @@ internal class Program
     var port = opt.Port;
 
     // Create a TCP listener
-    var listener = new TcpListener(ipAddress, port);
+    using var listener = new TcpListener(ipAddress, port);
 
     try
     {
