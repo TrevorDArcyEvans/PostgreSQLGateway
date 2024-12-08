@@ -1,0 +1,67 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/25.0.2 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="25.0.2">
+  <diagram name="Page-1" id="COCb7rYRg-0u_LhJS9iz">
+    <mxGraphModel dx="1434" dy="837" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ktSaS3tlNVh_1JBK5FA7-1" value="MS SQL Server" style="shape=datastore;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="188" y="410" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ktSaS3tlNVh_1JBK5FA7-2" value="MariaDB" style="shape=datastore;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="288" y="410" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ktSaS3tlNVh_1JBK5FA7-3" value="MongoDB" style="shape=datastore;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="398" y="410" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ktSaS3tlNVh_1JBK5FA7-4" value="PostgreSQL client" style="shape=actor;whiteSpace=wrap;html=1;align=left;labelPosition=right;verticalLabelPosition=middle;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="340" y="100" width="40" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ktSaS3tlNVh_1JBK5FA7-5" value="PostgreSQL Gateway" style="rounded=0;whiteSpace=wrap;html=1;labelPosition=right;verticalLabelPosition=top;align=left;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="200" y="260" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="ktSaS3tlNVh_1JBK5FA7-6" value="PostgreSQL wire protocol" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;" edge="1" parent="1" source="ktSaS3tlNVh_1JBK5FA7-5" target="ktSaS3tlNVh_1JBK5FA7-4">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="70" y="410" as="sourcePoint" />
+            <mxPoint x="170" y="310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ktSaS3tlNVh_1JBK5FA7-7" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="ktSaS3tlNVh_1JBK5FA7-1" target="ktSaS3tlNVh_1JBK5FA7-5">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="60" y="530" as="sourcePoint" />
+            <mxPoint x="160" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ktSaS3tlNVh_1JBK5FA7-8" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="ktSaS3tlNVh_1JBK5FA7-2" target="ktSaS3tlNVh_1JBK5FA7-5">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="220" y="620" as="sourcePoint" />
+            <mxPoint x="320" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ktSaS3tlNVh_1JBK5FA7-9" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="ktSaS3tlNVh_1JBK5FA7-5" target="ktSaS3tlNVh_1JBK5FA7-3">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="570" y="390" as="sourcePoint" />
+            <mxPoint x="670" y="290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ktSaS3tlNVh_1JBK5FA7-10" value="query&lt;div&gt;routing&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fontStyle=1;strokeWidth=4;" vertex="1" parent="1">
+          <mxGeometry x="320" y="270" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ktSaS3tlNVh_1JBK5FA7-11" value="protocol&lt;div&gt;support&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="270" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ktSaS3tlNVh_1JBK5FA7-12" value="client&lt;div&gt;support&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="414" y="270" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ktSaS3tlNVh_1JBK5FA7-13" value="PostgreSQL" style="shape=datastore;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="488" y="410" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ktSaS3tlNVh_1JBK5FA7-14" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="ktSaS3tlNVh_1JBK5FA7-5" target="ktSaS3tlNVh_1JBK5FA7-13">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="540" y="330" as="sourcePoint" />
+            <mxPoint x="669" y="403.0188679245284" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
