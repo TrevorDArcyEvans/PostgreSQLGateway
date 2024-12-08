@@ -8,6 +8,17 @@ public class ParameterStatusMessage : BackendMessage
 
   public string Value { get; set; } = string.Empty;
 
+  public ParameterStatusMessage()
+  {
+  }
+
+  public ParameterStatusMessage(string name, string value) :
+    base()
+  {
+    Name = name;
+    Value = value;
+  }
+
   public override byte[] Serialize()
   {
     using var buffer = new PostgresProtocolStream();

@@ -111,7 +111,7 @@ internal class Program
             if (value == SSLRequestMessage.SSLRequestMessageId)
             {
               // SSL declined
-              stream.Write([(byte)'N']);
+              stream.Write([(byte) 'N']);
               continue;
             }
 
@@ -121,6 +121,14 @@ internal class Program
               // authentication OK
               var authOk = new AuthenticationMessage();
               stream.Write(Serializer.Serialize(authOk));
+
+              // parameter statuses
+              stream.Write(Serializer.Serialize(new ParameterStatusMessage("application_name", "PostgreSQLGateway")));
+              stream.Write(Serializer.Serialize(new ParameterStatusMessage("client_encoding", "UTF8")));
+              stream.Write(Serializer.Serialize(new ParameterStatusMessage("server_version", "14.7")));
+              stream.Write(Serializer.Serialize(new ParameterStatusMessage("server_encoding", "UTF8")));
+              stream.Write(Serializer.Serialize(new ParameterStatusMessage("DateStyle", "ISO")));
+              stream.Write(Serializer.Serialize(new ParameterStatusMessage("PreferQueryMode", "simple")));
 
               // back end key
               var keyData = new BackendKeyDataMessage
@@ -149,6 +157,10 @@ internal class Program
 
           case TerminateMessage terminate:
             isRunning = false;
+            break;
+
+          default:
+            _logger.LogError($"Unknown message: {msg.MessageTypeId}");
             break;
         }
       }
