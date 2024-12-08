@@ -28,10 +28,10 @@ internal class Program
     var logLevel = Enum.Parse<LogLevel>(logLevelStr);
     var services = new ServiceCollection();
 
-    services.AddLogging(builder =>
+    services.AddLogging(build =>
     {
-      builder.SetMinimumLevel(logLevel);
-      builder.AddConsole();
+      build.SetMinimumLevel(logLevel);
+      build.AddConsole();
     });
 
     var serviceProvider = services.BuildServiceProvider();
@@ -272,7 +272,6 @@ internal class Program
     {
       _logger.LogInformation("Help Request");
       return Task.CompletedTask;
-      ;
     }
 
     _logger.LogInformation("Parser Fail");
