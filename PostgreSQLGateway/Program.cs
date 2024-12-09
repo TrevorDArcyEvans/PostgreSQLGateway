@@ -69,21 +69,47 @@ internal class Program
       listener.Start();
       _logger.LogInformation("Listening for connections on port {0}...", port);
 
-      while (!listener.Pending())
-      {
-        Thread.Sleep(10);
-
-        if (!isRunning)
-        {
-          return;
-        }
-      }
-
       // accept incoming connections
-      using var client = await listener.AcceptTcpClientAsync();
+      while (isRunning)
+      {
+        while (!listener.Pending())
+        {
+          Thread.Sleep(10);
+
+          if (!isRunning)
+          {
+            return;
+          }
+        }
+
+        var client = await listener.AcceptTcpClientAsync();
+        var t = new Thread(HandleClient);
+        t.Start(client);
+      }
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, $"An error occurred: {ex.Message}");
+    }
+    finally
+    {
+      _logger.LogInformation("Shutting down...");
+
+      // Stop listening for connections
+      listener.Stop();
+    }
+  }
+
+  private async void HandleClient(object? obj)
+  {
+    try
+    {
+      using var client = (TcpClient)obj!;
+
       _logger.LogInformation("Connection accepted from {0}.", client.Client.RemoteEndPoint);
       await using var stream = client.GetStream();
 
+      var isRunning = true;
       while (isRunning)
       {
         // receive data from the client
@@ -111,7 +137,7 @@ internal class Program
             if (value == SSLRequestMessage.SSLRequestMessageId)
             {
               // SSL declined
-              stream.Write([(byte) 'N']);
+              stream.Write([(byte)'N']);
               continue;
             }
 
@@ -167,14 +193,7 @@ internal class Program
     }
     catch (Exception ex)
     {
-      _logger.LogInformation("An error occurred: {0}", ex.Message);
-    }
-    finally
-    {
-      _logger.LogInformation("Shutting down...");
-
-      // Stop listening for connections
-      listener.Stop();
+      _logger.LogError(ex, $"An error occurred: {ex.Message}");
     }
   }
 
