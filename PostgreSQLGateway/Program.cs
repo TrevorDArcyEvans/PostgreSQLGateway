@@ -109,17 +109,18 @@ internal class Program
       _logger.LogInformation("Connection accepted from {0}.", client.Client.RemoteEndPoint);
       await using var stream = client.GetStream();
 
+      var startupMsg = new StartupMessage();
+
       var isRunning = true;
       while (isRunning)
       {
         // receive data from the client
-        var buffer = new byte[1024];
+        var buffer = new byte[1024 * 1024];
         var bytesRead = stream.Read(buffer, 0, buffer.Length);
         if (bytesRead <= 0)
         {
           continue;
         }
-
 
         var receivedData = System.Text.Encoding.ASCII.GetString(buffer, 0, bytesRead);
         _logger.LogInformation($"Received data from client: {receivedData}");
@@ -145,7 +146,6 @@ internal class Program
             if (value == StartupMessage.ProtocolVersion)
             {
               // startup message is length prefixed, so start buffer after size
-              var startupMsg = new StartupMessage();
               startupMsg.Deserialize(buffer[sizeof(int)..bytesRead]);
 
               // authentication OK
@@ -182,7 +182,11 @@ internal class Program
         switch (msg)
         {
           case QueryMessage query:
-            Process(stream, query);
+            Process(stream, startupMsg, query);
+            break;
+
+          case ParseMessage parse:
+            Process(stream, startupMsg, parse);
             break;
 
           case TerminateMessage terminate:
@@ -190,7 +194,7 @@ internal class Program
             break;
 
           default:
-            _logger.LogError($"Unknown message: {msg.MessageTypeId}");
+            _logger.LogError($"Unknown message: {msg.MessageTypeId} / {msg.GetType().Name}");
             break;
         }
       }
@@ -201,8 +205,77 @@ internal class Program
     }
   }
 
-  private void Process(NetworkStream stream, QueryMessage query)
+  private void Process(NetworkStream stream, StartupMessage startupMsg, ParseMessage parse)
   {
+    _logger.LogInformation(parse.Query);
+  }
+
+  private void Process(NetworkStream stream, StartupMessage startupMsg, QueryMessage query)
+  {
+    if (ProcessNpgsql(stream, startupMsg, query))
+    {
+      return;
+    }
+
+    if (ProcessDummyData(stream, startupMsg, query))
+    {
+      return;
+    }
+  }
+
+  private bool ProcessNpgsql(NetworkStream stream, StartupMessage startupMsg, QueryMessage query)
+  {
+    if (!query.Query.StartsWith("SELECT version();"))
+    {
+      return false;
+    }
+
+    var stopProcessing = false;
+
+    // SELECT version();
+    var rowDescr = new RowDescriptionMessage();
+    rowDescr.RowFieldDescriptions.Add(
+      new RowFieldDescription
+      {
+        FieldName = "version",
+        TableOid = 0,
+        RowAttributeId = 0,
+        FieldTypeOid = 1043, // varchar
+        DataTypeSize = -1,
+        TypeModifier = -1,
+        FormatCode = 0
+      });
+    stream.Write(Serializer.Serialize(rowDescr));
+
+    // version
+    var dataRow = new DataRowMessage();
+    var version = new RowField
+    {
+      Value = SerializerCore.Serialize("PostgreSQL 17.2 (Debian 17.2-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit")
+    };
+    dataRow.Rows.Add(version);
+    stream.Write(Serializer.Serialize(dataRow));
+
+
+    var complete = new CommandCompleteMessage
+    {
+      CommandTag = 1.ToString()
+    };
+    stream.Write(Serializer.Serialize(complete));
+
+    stream.Write(Serializer.Serialize(rowDescr));
+    stream.Write(Serializer.Serialize(complete));
+
+    // var ready = new ReadyForQueryMessage();
+    // stream.Write(Serializer.Serialize(ready));
+
+    return stopProcessing;
+  }
+
+  private bool ProcessDummyData(NetworkStream stream, StartupMessage startupMsg, QueryMessage query)
+  {
+    var stopProcessing = true;
+
     var rowDescr = new RowDescriptionMessage();
     rowDescr.RowFieldDescriptions.Add(
       new RowFieldDescription
@@ -232,13 +305,13 @@ internal class Program
     {
       var dataRow = new DataRowMessage();
 
-      // index
-      var idx = new RowField
+      // version
+      var version = new RowField
       {
         // WTF?  Have to serialise int32 as string
         Value = SerializerCore.Serialize(21.ToString())
       };
-      dataRow.Rows.Add(idx);
+      dataRow.Rows.Add(version);
 
       // customer name
       var name = new RowField
@@ -281,6 +354,8 @@ internal class Program
 
     var ready = new ReadyForQueryMessage();
     stream.Write(Serializer.Serialize(ready));
+
+    return stopProcessing;
   }
 
   private Task HandleParseError(IEnumerable<Error> errs)
