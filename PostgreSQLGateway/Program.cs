@@ -104,7 +104,7 @@ internal class Program
   {
     try
     {
-      using var client = (TcpClient)obj!;
+      using var client = (TcpClient) obj!;
 
       _logger.LogInformation("Connection accepted from {0}.", client.Client.RemoteEndPoint);
       await using var stream = client.GetStream();
@@ -138,7 +138,7 @@ internal class Program
             if (value == SSLRequestMessage.SSLRequestMessageId)
             {
               // SSL declined
-              stream.Write([(byte)'N']);
+              stream.Write([(byte) 'N']);
               continue;
             }
 
@@ -208,154 +208,27 @@ internal class Program
   private void Process(NetworkStream stream, StartupMessage startupMsg, ParseMessage parse)
   {
     _logger.LogInformation(parse.Query);
+
+    var jpmh = new JDBCMetadata.ParseMessageHandler();
+    if (jpmh.Process(stream, startupMsg, parse))
+    {
+      return;
+    }
   }
 
   private void Process(NetworkStream stream, StartupMessage startupMsg, QueryMessage query)
   {
-    if (ProcessNpgsql(stream, startupMsg, query))
+    var nqmh = new Npgsql.QueryMessageHandler();
+    if (nqmh.Process(stream, startupMsg, query))
     {
       return;
     }
 
-    if (ProcessDummyData(stream, startupMsg, query))
+    var ddqmh = new DummyData.QueryMessageHandler();
+    if (ddqmh.Process(stream, startupMsg, query))
     {
       return;
     }
-  }
-
-  private bool ProcessNpgsql(NetworkStream stream, StartupMessage startupMsg, QueryMessage query)
-  {
-    if (!query.Query.StartsWith("SELECT version();"))
-    {
-      return false;
-    }
-
-    var stopProcessing = false;
-
-    // SELECT version();
-    var rowDescr = new RowDescriptionMessage();
-    rowDescr.RowFieldDescriptions.Add(
-      new RowFieldDescription
-      {
-        FieldName = "version",
-        TableOid = 0,
-        RowAttributeId = 0,
-        FieldTypeOid = 1043, // varchar
-        DataTypeSize = -1,
-        TypeModifier = -1,
-        FormatCode = 0
-      });
-    stream.Write(Serializer.Serialize(rowDescr));
-
-    // version
-    var dataRow = new DataRowMessage();
-    var version = new RowField
-    {
-      Value = SerializerCore.Serialize("PostgreSQL 17.2 (Debian 17.2-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit")
-    };
-    dataRow.Rows.Add(version);
-    stream.Write(Serializer.Serialize(dataRow));
-
-
-    var complete = new CommandCompleteMessage
-    {
-      CommandTag = 1.ToString()
-    };
-    stream.Write(Serializer.Serialize(complete));
-
-    stream.Write(Serializer.Serialize(rowDescr));
-    stream.Write(Serializer.Serialize(complete));
-
-    // var ready = new ReadyForQueryMessage();
-    // stream.Write(Serializer.Serialize(ready));
-
-    return stopProcessing;
-  }
-
-  private bool ProcessDummyData(NetworkStream stream, StartupMessage startupMsg, QueryMessage query)
-  {
-    var stopProcessing = true;
-
-    var rowDescr = new RowDescriptionMessage();
-    rowDescr.RowFieldDescriptions.Add(
-      new RowFieldDescription
-      {
-        FieldName = "Id",
-        TableOid = 0,
-        RowAttributeId = 0,
-        FieldTypeOid = 23, // int32
-        DataTypeSize = sizeof(int),
-        TypeModifier = -1,
-        FormatCode = 0
-      });
-    rowDescr.RowFieldDescriptions.Add(
-      new RowFieldDescription
-      {
-        FieldName = "Name",
-        TableOid = 0,
-        RowAttributeId = 0,
-        FieldTypeOid = 25, // string
-        DataTypeSize = -1,
-        TypeModifier = -1,
-        FormatCode = 0
-      });
-    stream.Write(Serializer.Serialize(rowDescr));
-
-
-    {
-      var dataRow = new DataRowMessage();
-
-      // version
-      var version = new RowField
-      {
-        // WTF?  Have to serialise int32 as string
-        Value = SerializerCore.Serialize(21.ToString())
-      };
-      dataRow.Rows.Add(version);
-
-      // customer name
-      var name = new RowField
-      {
-        Value = SerializerCore.Serialize("Mr Jacob Rees-Mogg Esq")
-      };
-      dataRow.Rows.Add(name);
-
-      stream.Write(Serializer.Serialize(dataRow));
-    }
-
-    {
-      var dataRow = new DataRowMessage();
-
-      // index
-      var idx = new RowField
-      {
-        // WTF?  Have to serialise int32 as string
-        Value = SerializerCore.Serialize(23.ToString())
-      };
-      dataRow.Rows.Add(idx);
-
-      // customer name
-      var name = new RowField
-      {
-        Value = SerializerCore.Serialize("Rishi Sunak")
-      };
-      dataRow.Rows.Add(name);
-
-      stream.Write(Serializer.Serialize(dataRow));
-    }
-
-
-    var complete = new CommandCompleteMessage
-    {
-      CommandTag = 1.ToString()
-    };
-    stream.Write(Serializer.Serialize(complete));
-
-
-    var ready = new ReadyForQueryMessage();
-    stream.Write(Serializer.Serialize(ready));
-
-    return stopProcessing;
   }
 
   private Task HandleParseError(IEnumerable<Error> errs)
