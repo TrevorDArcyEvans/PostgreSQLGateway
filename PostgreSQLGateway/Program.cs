@@ -144,6 +144,10 @@ internal class Program
             // startup request
             if (value == StartupMessage.ProtocolVersion)
             {
+              // startup message is length prefixed, so start buffer after size
+              var startupMsg = new StartupMessage();
+              startupMsg.Deserialize(buffer[sizeof(int)..bytesRead]);
+
               // authentication OK
               var authOk = new AuthenticationMessage();
               stream.Write(Serializer.Serialize(authOk));
