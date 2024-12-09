@@ -147,30 +147,9 @@ internal class Program
             {
               // startup message is length prefixed, so start buffer after size
               startupMsg.Deserialize(buffer[sizeof(int)..bytesRead]);
-
-              // authentication OK
-              var authOk = new AuthenticationMessage();
-              stream.Write(Serializer.Serialize(authOk));
-
-              // parameter statuses
-              stream.Write(Serializer.Serialize(new ParameterStatusMessage("application_name", "PostgreSQLGateway")));
-              stream.Write(Serializer.Serialize(new ParameterStatusMessage("client_encoding", "UTF8")));
-              stream.Write(Serializer.Serialize(new ParameterStatusMessage("server_version", "17.2")));
-              stream.Write(Serializer.Serialize(new ParameterStatusMessage("server_encoding", "UTF8")));
-              stream.Write(Serializer.Serialize(new ParameterStatusMessage("DateStyle", "ISO")));
-              stream.Write(Serializer.Serialize(new ParameterStatusMessage("PreferQueryMode", "simple")));
-
-              // back end key
-              var keyData = new BackendKeyDataMessage
-              {
-                ProcessId = Environment.ProcessId,
-                SecretKey = client.Client.GetHashCode()
-              };
-              stream.Write(Serializer.Serialize(keyData));
-
-              // ready for query
-              var ready = new ReadyForQueryMessage();
-              stream.Write(Serializer.Serialize(ready));
+              
+              var smh = new StartupMessageHandler();
+              _ = smh.Process(stream, startupMsg, startupMsg);
 
               continue;
             }
