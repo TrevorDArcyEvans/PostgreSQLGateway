@@ -1,3 +1,5 @@
+using PostgreSQLGateway.Interfaces;
+
 namespace PostgreSQLGateway.Npgsql;
 
 using System.Net.Sockets;

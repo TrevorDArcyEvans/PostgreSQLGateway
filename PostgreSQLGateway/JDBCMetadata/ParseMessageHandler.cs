@@ -1,3 +1,5 @@
+using PostgreSQLGateway.Interfaces;
+
 namespace PostgreSQLGateway.JDBCMetadata;
 
 using System.Net.Sockets;

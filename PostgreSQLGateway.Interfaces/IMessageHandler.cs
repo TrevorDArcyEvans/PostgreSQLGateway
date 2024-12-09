@@ -1,4 +1,4 @@
-namespace PostgreSQLGateway;
+namespace PostgreSQLGateway.Interfaces;
 
 using System.Net.Sockets;
 using PostgresMessageSerializer;

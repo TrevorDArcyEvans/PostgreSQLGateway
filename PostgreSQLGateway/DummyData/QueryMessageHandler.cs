@@ -1,3 +1,5 @@
+using PostgreSQLGateway.Interfaces;
+
 namespace PostgreSQLGateway.DummyData;
 
 using System.Net.Sockets;
