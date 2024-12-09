@@ -164,7 +164,7 @@ internal class Program
               var keyData = new BackendKeyDataMessage
               {
                 ProcessId = Environment.ProcessId,
-                SecretKey = Random.Shared.Next()
+                SecretKey = client.Client.GetHashCode()
               };
               stream.Write(Serializer.Serialize(keyData));
 
