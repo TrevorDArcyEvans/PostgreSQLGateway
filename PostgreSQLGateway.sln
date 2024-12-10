@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyData", "DummyData\Dumm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NpgsqlMessageHandler", "NpgsqlMessageHandler\NpgsqlMessageHandler.csproj", "{E5858B26-FDE2-4FF4-A742-753D3DCE9F4C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgreSQLGateway.StartupMessageHandler", "PostgreSQLGateway.StartupMessageHandler\PostgreSQLGateway.StartupMessageHandler.csproj", "{BD620F62-4294-47BB-A3C1-32FEEAE54448}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +56,9 @@ Global
 		{E5858B26-FDE2-4FF4-A742-753D3DCE9F4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5858B26-FDE2-4FF4-A742-753D3DCE9F4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5858B26-FDE2-4FF4-A742-753D3DCE9F4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD620F62-4294-47BB-A3C1-32FEEAE54448}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD620F62-4294-47BB-A3C1-32FEEAE54448}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD620F62-4294-47BB-A3C1-32FEEAE54448}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD620F62-4294-47BB-A3C1-32FEEAE54448}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -14,6 +14,7 @@ using PostgreSQLGateway.Interfaces;
 
 internal class Program
 {
+  private readonly IEnumerable<IMessageHandler<StartupMessage>?> _startupMessageHandlers;
   private readonly IEnumerable<IMessageHandler<QueryMessage>?> _queryMessageHandlers;
   private readonly IEnumerable<IMessageHandler<ParseMessage>?> _parseMessageHandlers;
 
@@ -46,6 +47,19 @@ internal class Program
 
     var messageHandlers = appConfig.GetSection("MessageHandlers");
 
+    var startMH = messageHandlers.GetSection("StartupMessage");
+    var startMHlist = new List<MessageHandlerConfig>();
+    startMH.Bind(startMHlist);
+    _startupMessageHandlers = startMHlist
+      .OrderBy(x => x.Order)
+      .Select(x =>
+      {
+        var type = Assembly
+          .LoadFile(Path.Combine(Environment.CurrentDirectory, x.Assembly))
+          .GetTypes()
+          .Single(t => t.FullName == x.Type);
+        return (IMessageHandler<StartupMessage>)Activator.CreateInstance(type); });
+
     var queryMH = messageHandlers.GetSection("QueryMessage");
     var queryMHlist = new List<MessageHandlerConfig>();
     queryMH.Bind(queryMHlist);
@@ -57,9 +71,7 @@ internal class Program
           .LoadFile(Path.Combine(Environment.CurrentDirectory, x.Assembly))
           .GetTypes()
           .Single(t => t.FullName == x.Type);
-        return (IMessageHandler<QueryMessage>)Activator.CreateInstance(type);
-      });
-
+        return (IMessageHandler<QueryMessage>)Activator.CreateInstance(type); });
 
     var parseMH = messageHandlers.GetSection("ParseMessage");
     var parseMHlist = new List<MessageHandlerConfig>();
@@ -186,8 +198,7 @@ internal class Program
               // startup message is length prefixed, so start buffer after size
               startupMsg.Deserialize(buffer[sizeof(int)..bytesRead]);
 
-              var smh = new StartupMessageHandler();
-              _ = smh.Process(stream, startupMsg, startupMsg);
+              Process(stream, startupMsg, startupMsg);
 
               continue;
             }
@@ -222,24 +233,35 @@ internal class Program
     }
   }
 
-  private void Process(NetworkStream stream, StartupMessage startupMsg, ParseMessage parse)
+  private void Process(NetworkStream stream, StartupMessage startupMsg, StartupMessage msg)
   {
-    _logger.LogInformation(parse.Query);
-
-    foreach (var pmh in _parseMessageHandlers)
+    foreach (var mh in _startupMessageHandlers)
     {
-      if (pmh.Process(stream, startupMsg, parse))
+      if (mh.Process(stream, startupMsg, msg))
       {
         return;
       }
     }
   }
 
-  private void Process(NetworkStream stream, StartupMessage startupMsg, QueryMessage query)
+  private void Process(NetworkStream stream, StartupMessage startupMsg, ParseMessage msg)
   {
-    foreach (var qmh in _queryMessageHandlers)
+    _logger.LogInformation(msg.Query);
+
+    foreach (var mh in _parseMessageHandlers)
     {
-      if (qmh.Process(stream, startupMsg, query))
+      if (mh.Process(stream, startupMsg, msg))
+      {
+        return;
+      }
+    }
+  }
+
+  private void Process(NetworkStream stream, StartupMessage startupMsg, QueryMessage msg)
+  {
+    foreach (var mh in _queryMessageHandlers)
+    {
+      if (mh.Process(stream, startupMsg, msg))
       {
         return;
       }
