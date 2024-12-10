@@ -4,13 +4,18 @@ using System.Buffers;
 using System.Net;
 using System.Net.Sockets;
 using CommandLine;
-using PostgresMessageSerializer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PostgresMessageSerializer;
+using PostgreSQLGateway.Interfaces;
 
 internal class Program
 {
+  private readonly IEnumerable<IMessageHandler<QueryMessage>?> _queryMessageHandlers;
+  private readonly IEnumerable<IMessageHandler<ParseMessage>?> _parseMessageHandlers;
+
   private readonly ILogger<Program> _logger;
 
   public static async Task Main(string[] args)
@@ -36,6 +41,23 @@ internal class Program
 
     var serviceProvider = services.BuildServiceProvider();
     _logger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger<Program>();
+
+
+    var messageHandlers = appConfig.GetSection("MessageHandlers");
+
+    var queryMH = messageHandlers.GetSection("QueryMessage");
+    var queryMHlist = new List<MessageHandlerConfig>();
+    queryMH.Bind(queryMHlist);
+    _queryMessageHandlers = queryMHlist
+      .OrderBy(x => x.Order)
+      .Select(x => (IMessageHandler<QueryMessage>)Activator.CreateInstance(Type.GetType(x.Handler)));
+
+    var parseMH = messageHandlers.GetSection("ParseMessage");
+    var parseMHlist = new List<MessageHandlerConfig>();
+    parseMH.Bind(parseMHlist);
+    _parseMessageHandlers = parseMHlist
+      .OrderBy(x => x.Order)
+      .Select(x => (IMessageHandler<ParseMessage>)Activator.CreateInstance(Type.GetType(x.Handler)));
   }
 
   private async Task Run(string[] args)
@@ -104,7 +126,7 @@ internal class Program
   {
     try
     {
-      using var client = (TcpClient) obj!;
+      using var client = (TcpClient)obj!;
 
       _logger.LogInformation("Connection accepted from {0}.", client.Client.RemoteEndPoint);
       await using var stream = client.GetStream();
@@ -138,7 +160,7 @@ internal class Program
             if (value == SSLRequestMessage.SSLRequestMessageId)
             {
               // SSL declined
-              stream.Write([(byte) 'N']);
+              stream.Write([(byte)'N']);
               continue;
             }
 
@@ -147,7 +169,7 @@ internal class Program
             {
               // startup message is length prefixed, so start buffer after size
               startupMsg.Deserialize(buffer[sizeof(int)..bytesRead]);
-              
+
               var smh = new StartupMessageHandler();
               _ = smh.Process(stream, startupMsg, startupMsg);
 
@@ -188,25 +210,23 @@ internal class Program
   {
     _logger.LogInformation(parse.Query);
 
-    var jpmh = new JDBCMetadata.ParseMessageHandler();
-    if (jpmh.Process(stream, startupMsg, parse))
+    foreach (var pmh in _parseMessageHandlers)
     {
-      return;
+      if (pmh.Process(stream, startupMsg, parse))
+      {
+        return;
+      }
     }
   }
 
   private void Process(NetworkStream stream, StartupMessage startupMsg, QueryMessage query)
   {
-    var nqmh = new Npgsql.QueryMessageHandler();
-    if (nqmh.Process(stream, startupMsg, query))
+    foreach (var qmh in _queryMessageHandlers)
     {
-      return;
-    }
-
-    var ddqmh = new DummyData.QueryMessageHandler();
-    if (ddqmh.Process(stream, startupMsg, query))
-    {
-      return;
+      if (qmh.Process(stream, startupMsg, query))
+      {
+        return;
+      }
     }
   }
 
