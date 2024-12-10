@@ -3,6 +3,7 @@
 using System.Buffers;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using CommandLine;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -50,14 +51,29 @@ internal class Program
     queryMH.Bind(queryMHlist);
     _queryMessageHandlers = queryMHlist
       .OrderBy(x => x.Order)
-      .Select(x => (IMessageHandler<QueryMessage>)Activator.CreateInstance(Type.GetType(x.Handler)));
+      .Select(x =>
+      {
+        var type = Assembly
+          .LoadFile(Path.Combine(Environment.CurrentDirectory, x.Assembly))
+          .GetTypes()
+          .Single(t => t.FullName == x.Type);
+        return (IMessageHandler<QueryMessage>)Activator.CreateInstance(type);
+      });
+
 
     var parseMH = messageHandlers.GetSection("ParseMessage");
     var parseMHlist = new List<MessageHandlerConfig>();
     parseMH.Bind(parseMHlist);
     _parseMessageHandlers = parseMHlist
       .OrderBy(x => x.Order)
-      .Select(x => (IMessageHandler<ParseMessage>)Activator.CreateInstance(Type.GetType(x.Handler)));
+      .Select(x => 
+      {
+        var type = Assembly
+          .LoadFile(Path.Combine(Environment.CurrentDirectory, x.Assembly))
+          .GetTypes()
+          .Single(t => t.FullName == x.Type);
+        return (IMessageHandler<ParseMessage>)Activator.CreateInstance(type);
+      });
   }
 
   private async Task Run(string[] args)

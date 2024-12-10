@@ -1,4 +1,4 @@
-namespace PostgreSQLGateway.JDBCMetadata;
+namespace JDBCMetadata;
 
 using System.Net.Sockets;
 using PostgresMessageSerializer;
