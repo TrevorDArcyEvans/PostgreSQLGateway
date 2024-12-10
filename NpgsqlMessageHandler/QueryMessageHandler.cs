@@ -1,9 +1,8 @@
-using PostgreSQLGateway.Interfaces;
-
-namespace PostgreSQLGateway.Npgsql;
+namespace NpgsqlMessageHandler;
 
 using System.Net.Sockets;
 using PostgresMessageSerializer;
+using PostgreSQLGateway.Interfaces;
 
 public class QueryMessageHandler : IMessageHandler<QueryMessage>
 {
