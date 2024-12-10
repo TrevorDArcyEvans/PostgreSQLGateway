@@ -8,7 +8,11 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
 {
   public bool Process(NetworkStream stream, StartupMessage startupMsg, QueryMessage query)
   {
-    if (!query.Query.StartsWith("SELECT version();"))
+    if (!query.Query.StartsWith("SELECT version();") ||
+        !query.Query.Contains("SELECT ns.nspname, t.oid, t.typname, t.typtype, t.typnotnull, t.elemtypoid") ||
+        !query.Query.Contains("-- Arrays have typtype=b - this subquery identifies them by their typreceive and converts their typtype to a") ||
+        !query.Query.Contains("-- We first do this for the type (innerest-most subquery), and then for its element type") ||
+        !query.Query.Contains("-- This also returns the array element, range subtype and domain base type as elemtypoid") )
     {
       return false;
     }
