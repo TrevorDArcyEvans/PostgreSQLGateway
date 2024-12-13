@@ -32,7 +32,7 @@ internal class Program
     var app = builder.Build();
     var appConfig = app.Configuration;
     var logLevelStr = appConfig["Logging:LogLevel:Default"];
-    var logLevel = Enum.Parse<LogLevel>(logLevelStr);
+    var logLevel = Enum.Parse<LogLevel>(logLevelStr!);
     var services = new ServiceCollection();
 
     services.AddLogging(build =>
@@ -58,7 +58,7 @@ internal class Program
           .LoadFile(Path.Combine(Environment.CurrentDirectory, x.Assembly))
           .GetTypes()
           .Single(t => t.FullName == x.Type);
-        return (IMessageHandler<StartupMessage>)Activator.CreateInstance(type); });
+        return (IMessageHandler<StartupMessage>)Activator.CreateInstance(type)!; });
 
     var queryMH = messageHandlers.GetSection("QueryMessage");
     var queryMHlist = new List<MessageHandlerConfig>();
@@ -71,7 +71,7 @@ internal class Program
           .LoadFile(Path.Combine(Environment.CurrentDirectory, x.Assembly))
           .GetTypes()
           .Single(t => t.FullName == x.Type);
-        return (IMessageHandler<QueryMessage>)Activator.CreateInstance(type); });
+        return (IMessageHandler<QueryMessage>)Activator.CreateInstance(type)!; });
 
     var parseMH = messageHandlers.GetSection("ParseMessage");
     var parseMHlist = new List<MessageHandlerConfig>();
@@ -84,7 +84,7 @@ internal class Program
           .LoadFile(Path.Combine(Environment.CurrentDirectory, x.Assembly))
           .GetTypes()
           .Single(t => t.FullName == x.Type);
-        return (IMessageHandler<ParseMessage>)Activator.CreateInstance(type);
+        return (IMessageHandler<ParseMessage>)Activator.CreateInstance(type)!;
       });
   }
 
@@ -237,7 +237,7 @@ internal class Program
   {
     foreach (var mh in _startupMessageHandlers)
     {
-      if (mh.Process(stream, startupMsg, msg))
+      if (mh!.Process(stream, startupMsg, msg))
       {
         return;
       }
@@ -250,7 +250,7 @@ internal class Program
 
     foreach (var mh in _parseMessageHandlers)
     {
-      if (mh.Process(stream, startupMsg, msg))
+      if (mh!.Process(stream, startupMsg, msg))
       {
         return;
       }
@@ -261,7 +261,7 @@ internal class Program
   {
     foreach (var mh in _queryMessageHandlers)
     {
-      if (mh.Process(stream, startupMsg, msg))
+      if (mh!.Process(stream, startupMsg, msg))
       {
         return;
       }
