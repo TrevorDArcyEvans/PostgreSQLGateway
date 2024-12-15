@@ -27,7 +27,7 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
         FieldName = "version",
         TableOid = 0,
         RowAttributeId = 0,
-        FieldTypeOid = 1043, // varchar
+        FieldTypeOid = (int) ColumnType.TEXT,
         DataTypeSize = -1,
         TypeModifier = -1,
         FormatCode = 0
@@ -46,7 +46,7 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
 
     var complete = new CommandCompleteMessage
     {
-      CommandTag = 1.ToString()
+      CommandTag = "SELECT 1"
     };
     stream.Write(Serializer.Serialize(complete));
 

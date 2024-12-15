@@ -17,7 +17,7 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
         FieldName = "Id",
         TableOid = 0,
         RowAttributeId = 0,
-        FieldTypeOid = 23, // int32
+        FieldTypeOid = (int) ColumnType.INT4, // int32
         DataTypeSize = sizeof(int),
         TypeModifier = -1,
         FormatCode = 0
@@ -28,7 +28,7 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
         FieldName = "Name",
         TableOid = 0,
         RowAttributeId = 0,
-        FieldTypeOid = 25, // string
+        FieldTypeOid = (int) ColumnType.TEXT, // string
         DataTypeSize = -1,
         TypeModifier = -1,
         FormatCode = 0
