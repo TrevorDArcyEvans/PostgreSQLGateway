@@ -19,4 +19,19 @@
     <ProjectReference Include="..\PostgreSQLGateway.Interfaces\PostgreSQLGateway.Interfaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="_Load_enum_fields_SELECT_pg_type_oid_enumlabel_FROM_pg_enum_JOIN_202412151617.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="_Load_field_definitions_for_free_standing_composite_types_SELECT_202412151616.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="_SELECT_ns_nspname_t_oid_t_typname_t_typtype_t_typnotnull_t_elem_202412151616.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="_select_version__202412151616.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
