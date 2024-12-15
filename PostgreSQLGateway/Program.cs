@@ -55,7 +55,7 @@ internal class Program
       .Select(x =>
       {
         var type = Assembly
-          .LoadFile(Path.Combine(Environment.CurrentDirectory, x.Assembly))
+          .LoadFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), x.Assembly))
           .GetTypes()
           .Single(t => t.FullName == x.Type);
         return (IMessageHandler<StartupMessage>)Activator.CreateInstance(type)!; });
@@ -68,7 +68,7 @@ internal class Program
       .Select(x =>
       {
         var type = Assembly
-          .LoadFile(Path.Combine(Environment.CurrentDirectory, x.Assembly))
+          .LoadFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), x.Assembly))
           .GetTypes()
           .Single(t => t.FullName == x.Type);
         return (IMessageHandler<QueryMessage>)Activator.CreateInstance(type)!; });
@@ -81,7 +81,7 @@ internal class Program
       .Select(x => 
       {
         var type = Assembly
-          .LoadFile(Path.Combine(Environment.CurrentDirectory, x.Assembly))
+          .LoadFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), x.Assembly))
           .GetTypes()
           .Single(t => t.FullName == x.Type);
         return (IMessageHandler<ParseMessage>)Activator.CreateInstance(type)!;
