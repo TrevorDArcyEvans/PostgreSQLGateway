@@ -32,6 +32,16 @@ public class CommandCompleteMessage : BackendMessage
   /// </summary>
   public string CommandTag { get; set; } = string.Empty;
 
+  public CommandCompleteMessage() :
+    this(string.Empty)
+  {
+  }
+
+  public CommandCompleteMessage(string cmdTag)
+  {
+    CommandTag = cmdTag;
+  }
+
   public override byte[] Serialize()
   {
     using var buffer = new PostgresProtocolStream();

@@ -21,11 +21,7 @@ public class StartupMessageHandler : IMessageHandler<StartupMessage>
     stream.Write(Serializer.Serialize(new ParameterStatusMessage("PreferQueryMode", "simple")));
 
     // back end key
-    var keyData = new BackendKeyDataMessage
-    {
-      ProcessId = Environment.ProcessId,
-      SecretKey = stream.GetHashCode()
-    };
+    var keyData = new BackendKeyDataMessage(Environment.ProcessId, stream.GetHashCode());
     stream.Write(Serializer.Serialize(keyData));
 
     // ready for query

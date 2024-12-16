@@ -8,6 +8,17 @@ public class BackendKeyDataMessage : BackendMessage
 
   public int SecretKey { get; set; }
 
+  public BackendKeyDataMessage() :
+    this(0, 0)
+  {
+  }
+
+  public BackendKeyDataMessage(int processId, int secretKey)
+  {
+    ProcessId = processId;
+    SecretKey = secretKey;
+  }
+
   public override byte[] Serialize()
   {
     using var buffer = new PostgresProtocolStream();

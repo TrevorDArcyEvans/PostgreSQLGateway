@@ -12,9 +12,7 @@ public class BackendKeyDataMessage_Test
   public void Serialize_Deserialize_roundtrip(int pid, int key)
   {
     // arrange
-    var sut = new BackendKeyDataMessage();
-    sut.ProcessId = pid;
-    sut.SecretKey = key;
+    var sut = new BackendKeyDataMessage(pid,key);
 
     // act
     var data = sut.Serialize();

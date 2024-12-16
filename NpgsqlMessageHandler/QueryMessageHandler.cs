@@ -29,10 +29,7 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
     stream.Write(Serializer.Serialize(dataRow));
 
 
-    var complete = new CommandCompleteMessage
-    {
-      CommandTag = "SELECT 1"
-    };
+    var complete = new CommandCompleteMessage("SELECT 1");
     stream.Write(Serializer.Serialize(complete));
 
     stream.Write(Serializer.Serialize(rowDescr));
