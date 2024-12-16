@@ -2,7 +2,7 @@ namespace DummyData;
 
 using PostgresMessageSerializer;
 
-public class DummyDataDescription : RowDescriptionMessage
+public class DummyDataDescription : RowDescriptionMessage<DummyDataMessage>
 {
   public DummyDataDescription()
   {

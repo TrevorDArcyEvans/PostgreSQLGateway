@@ -19,20 +19,8 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
 
     var stopProcessing = false;
 
-    // TODO   create VersionInfoDescription
     // SELECT version();
-    var rowDescr = new RowDescriptionMessage();
-    rowDescr.RowFieldDescriptions.Add(
-      new RowFieldDescription
-      {
-        FieldName = "version",
-        TableOid = 0,
-        RowAttributeId = 0,
-        FieldTypeOid = (int)ColumnType.TEXT,
-        DataTypeSize = -1,
-        TypeModifier = -1,
-        FormatCode = 0
-      });
+    var rowDescr = new VersionInfoDescription();
     stream.Write(Serializer.Serialize(rowDescr));
 
     // TODO   derive VersionInfo from DataRowMessage

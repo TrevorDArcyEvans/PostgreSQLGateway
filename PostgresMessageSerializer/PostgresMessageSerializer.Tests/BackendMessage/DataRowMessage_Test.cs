@@ -34,8 +34,4 @@ public class DataRowMessage_Test
     // assert
     result.Should().BeEquivalentTo(sut);
   }
-
-  private class TestDataRowMessage : DataRowMessage
-  {
-  }
 }

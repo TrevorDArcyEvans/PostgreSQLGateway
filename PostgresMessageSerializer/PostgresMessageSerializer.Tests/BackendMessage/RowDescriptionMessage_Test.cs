@@ -9,7 +9,7 @@ public class RowDescriptionMessage_Test
   public void Serialize_Deserialize_roundtrip()
   {
     // arrange
-    var sut = new RowDescriptionMessage();
+    var sut = new TestDataRowDescription();
     for (var i = 1; i <= 3; i++)
     {
       var rowFieldDescr = new RowFieldDescription
@@ -27,7 +27,7 @@ public class RowDescriptionMessage_Test
 
     // act
     var data = sut.Serialize();
-    var result = new RowDescriptionMessage();
+    var result = new TestDataRowDescription();
     result.Deserialize(data);
 
     // assert

@@ -2,11 +2,11 @@ namespace PostgresMessageSerializer;
 
 using System.Collections.Generic;
 
-public class RowDescriptionMessage : BackendMessage
+public abstract class RowDescriptionMessage<T> : BackendMessage where T : DataRowMessage
 {
-  public override byte MessageTypeId => (byte) 'T';
+  public override byte MessageTypeId => (byte)'T';
 
-  public short FieldsCount => (short) RowFieldDescriptions.Count;
+  public short FieldsCount => (short)RowFieldDescriptions.Count;
 
   public IList<RowFieldDescription> RowFieldDescriptions { get; } = new List<RowFieldDescription>();
 
