@@ -21,22 +21,18 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
 
     // SELECT version();
     stream.Write(Serializer.Serialize(new VersionInfoDescription()));
-
-    // version
     stream.Write(Serializer.Serialize(VersionInfo.Instance.Value));
-
     stream.Write(Serializer.Serialize(new CommandCompleteMessage("SELECT 1")));
 
 
     // SELECT ns.nspname, t.oid, t.typname, t.typtype, t.typnotnull, t.elemtypoid
-    // TODO   OIDType
     stream.Write(Serializer.Serialize(new OIDTypeDescription()));
-
-    foreach (var oid in OIDType.Instance.Value)
+    foreach (var val in OIDType.Instance.Value)
     {
-      //stream.Write(Serializer.Serialize(oid));
+      //stream.Write(Serializer.Serialize(val));
     }
 
+    // TODO   remove once OIDType marshalled correctly
     stream.Write(Serializer.Serialize(OIDType.Instance.Value.First()));
 
     stream.Write(Serializer.Serialize(new CommandCompleteMessage($"SELECT {OIDType.Instance.Value.Count}")));
@@ -44,12 +40,20 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
 
     // -- Load field definitions for (free-standing) composite types
     stream.Write(Serializer.Serialize(new FieldDefinitionDescription()));
-    stream.Write(Serializer.Serialize(new CommandCompleteMessage("SELECT 0")));
+    foreach (var val in FieldDefinition.Instance.Value)
+    {
+      stream.Write(Serializer.Serialize(val));
+    }
+    stream.Write(Serializer.Serialize(new CommandCompleteMessage($"SELECT {FieldDefinition.Instance.Value.Count}")));
 
 
     // -- Load enum fields
     stream.Write(Serializer.Serialize(new EnumFieldDescription()));
-    stream.Write(Serializer.Serialize(new CommandCompleteMessage("SELECT 0")));
+    foreach (var val in EnumField.Instance.Value)
+    {
+      stream.Write(Serializer.Serialize(val));
+    }
+    stream.Write(Serializer.Serialize(new CommandCompleteMessage($"SELECT {EnumField.Instance.Value.Count}")));
 
 
     stream.Write(Serializer.Serialize(new ReadyForQueryMessage()));
