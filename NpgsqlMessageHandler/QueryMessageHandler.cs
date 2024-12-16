@@ -23,7 +23,7 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
     stream.Write(Serializer.Serialize(new VersionInfoDescription()));
 
     // version
-    stream.Write(Serializer.Serialize(VersionInfo.Instance));
+    stream.Write(Serializer.Serialize(VersionInfo.Instance.Value));
 
     stream.Write(Serializer.Serialize(new CommandCompleteMessage("SELECT 1")));
 
@@ -32,14 +32,14 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
     // TODO   OIDType
     stream.Write(Serializer.Serialize(new OIDTypeDescription()));
 
-    foreach (var oid in OIDType.Instance)
+    foreach (var oid in OIDType.Instance.Value)
     {
       //stream.Write(Serializer.Serialize(oid));
     }
 
-    stream.Write(Serializer.Serialize(OIDType.Instance.First()));
+    stream.Write(Serializer.Serialize(OIDType.Instance.Value.First()));
 
-    stream.Write(Serializer.Serialize(new CommandCompleteMessage($"SELECT {OIDType.Instance.Count}")));
+    stream.Write(Serializer.Serialize(new CommandCompleteMessage($"SELECT {OIDType.Instance.Value.Count}")));
 
 
     // -- Load field definitions for (free-standing) composite types

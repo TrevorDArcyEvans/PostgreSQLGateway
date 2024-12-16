@@ -11,9 +11,7 @@ using PostgresMessageSerializer;
 /// </summary>
 public class VersionInfo : DataRowMessage
 {
-  public static readonly VersionInfo Instance;
-
-  static VersionInfo()
+  public static readonly Lazy<VersionInfo> Instance = new(() =>
   {
     const string DataFile = "_select_version__202412151616.csv";
 
@@ -21,9 +19,8 @@ public class VersionInfo : DataRowMessage
     using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
     var records = csv.GetRecords<VersionInfo>().ToList();
 
-    Instance = records.Single();
-  }
-
+    return records.Single();
+  });
 
   public string version { get; set; }
 

@@ -11,17 +11,16 @@ using PostgresMessageSerializer;
 /// </summary>
 public class OIDType : DataRowMessage
 {
-  public static readonly List<OIDType> Instance;
-
-  static OIDType()
+  public static readonly Lazy<List<OIDType>> Instance = new(() =>
   {
     const string DataFile = "_SELECT_ns_nspname_t_oid_t_typname_t_typtype_t_typnotnull_t_elem_202412151616.csv";
 
     using var reader = new StreamReader(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), DataFile));
     using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
     csv.Context.RegisterClassMap<OIDTypeMap>();
-    Instance = csv.GetRecords<OIDType>().ToList();
-  }
+
+    return csv.GetRecords<OIDType>().ToList();
+  });
 
   public string nspname { get; set; } // 19 = NAME
   public int oid { get; set; } // 26 = OID
