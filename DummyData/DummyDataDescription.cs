@@ -12,7 +12,7 @@ public class DummyDataDescription : RowDescriptionMessage<DummyDataMessage>
         FieldName = nameof(DummyDataMessage.Id),
         TableOid = 0,
         RowAttributeId = 0,
-        FieldTypeOid = (int)ColumnType.INT4, // int32
+        FieldTypeOid = (int)ColumnTypeExtensions.TypeToColumnTypeMap[typeof(DummyDataMessage).GetProperty(nameof(DummyDataMessage.Id)).PropertyType],
         DataTypeSize = sizeof(int),
         TypeModifier = -1,
         FormatCode = 0
@@ -23,7 +23,7 @@ public class DummyDataDescription : RowDescriptionMessage<DummyDataMessage>
         FieldName = nameof(DummyDataMessage.Name),
         TableOid = 0,
         RowAttributeId = 0,
-        FieldTypeOid = (int)ColumnType.TEXT, // string
+        FieldTypeOid = (int)ColumnTypeExtensions.TypeToColumnTypeMap[typeof(DummyDataMessage).GetProperty(nameof(DummyDataMessage.Name)).PropertyType],
         DataTypeSize = -1,
         TypeModifier = -1,
         FormatCode = 0

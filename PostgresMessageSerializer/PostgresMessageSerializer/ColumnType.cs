@@ -1,5 +1,10 @@
 namespace PostgresMessageSerializer;
 
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Net;
+
 /// <summary>
 /// stolen from:
 ///     https://jdbc.postgresql.org/documentation/publicapi/constant-values.html
@@ -77,5 +82,106 @@ public enum ColumnType
   VARCHAR_ARRAY = 1015,
   VOID = 2278,
   XML = 142,
-  XML_ARRAY = 143
+  XML_ARRAY = 143,
+
+  // some esoteric ones
+  REG_PROC = 24,
+  XID = 28,
+  OIDVECTOR = 30,
+  PG_NODE_TREE = 194,
+  UNKNOWN = 705,
+  ACL_ITEM = 1034,
+}
+
+public static class ColumnTypeExtensions
+{
+  public static short DataTypeSize(this ColumnType colType)
+    => colType switch
+    {
+      ColumnType.BOOL => 1,
+      ColumnType.CHAR => 1,
+      ColumnType.CHAR_ARRAY => -1,
+      ColumnType.DATE => 4,
+      ColumnType.FLOAT4 => 4,
+      ColumnType.FLOAT8 => 8,
+      ColumnType.INT2 => 2,
+      ColumnType.INT4 => 4,
+      ColumnType.INT8 => 8,
+      ColumnType.INT8_ARRAY => -1,
+      ColumnType.NAME => 64,
+      ColumnType.NUMERIC => -1,
+      ColumnType.OID => 4,
+      ColumnType.OID_ARRAY => -1,
+      ColumnType.TEXT => -1,
+      ColumnType.TEXT_ARRAY => -1,
+      ColumnType.TIME => 8,
+      ColumnType.TIMESTAMP => 8,
+      ColumnType.UNSPECIFIED => -1,
+      ColumnType.UUID => 16,
+      ColumnType.VARCHAR => -1,
+
+      // some esoteric ones
+      ColumnType.REG_PROC => 4,
+      ColumnType.XID => 4,
+      ColumnType.OIDVECTOR => -1,
+      ColumnType.PG_NODE_TREE => -1,
+      ColumnType.UNKNOWN => -1,
+      ColumnType.ACL_ITEM => -1,
+      _ => -1
+    };
+
+  // Stolen from:
+  //      https://stackoverflow.com/questions/845458/postgresql-and-c-sharp-datatypes
+  //      https://www.npgsql.org/doc/types/basic.html
+  /*
+      Postgresql  NpgsqlDbType System.DbType Enum .NET System Type
+      ----------  ------------ ------------------ ----------------
+      int8        Bigint       Int64              Int64 aka long
+      bool        Boolean      Boolean            Boolean aka bool
+      bytea       Bytea        Binary             Byte[]
+      date        Date         Date               DateTime
+      float8      Double       Double             Double aka double
+      int4        Integer      Int32              Int32 aka int
+      money       Money        Decimal            Decimal aka decimal
+      numeric     Numeric      Decimal            Decimal aka decimal
+      float4      Real         Single             Single aka float
+      int2        Smallint     Int16              Int16 aka short
+      text        Text         String             String aka string
+      time        Time         Time               DateTime
+      timetz      Time         Time               DateTime
+      timestamp   Timestamp    DateTime           DateTime
+      timestamptz TimestampTZ  DateTime           DateTime
+      interval    Interval     Object             TimeSpan
+      varchar     Varchar      String             String aka string
+      inet        Inet         Object             IPAddress
+      bit         Bit          Boolean            Boolean aka bool
+      uuid        Uuid         Guid               Guid
+      array       Array        Object             Array
+
+      int8        ???          ???                uint aka UInt32
+      int2        ???          ???                byte aka Byte
+  */
+  public static ReadOnlyDictionary<Type, ColumnType> TypeToColumnTypeMap = new(new Dictionary<Type, ColumnType>
+  {
+    { typeof(bool), ColumnType.BOOL },
+    { typeof(char), ColumnType.CHAR },
+    { typeof(DateTime), ColumnType.DATE },
+    { typeof(double), ColumnType.FLOAT8 },
+    { typeof(byte), ColumnType.INT2 },
+    { typeof(sbyte), ColumnType.INT2 },
+    { typeof(short), ColumnType.INT2 },
+    { typeof(int), ColumnType.INT4 },
+    { typeof(ulong), ColumnType.INT8 },
+    { typeof(long), ColumnType.INT8 },
+    { typeof(uint), ColumnType.INT8 },
+    { typeof(ulong[]), ColumnType.INT8_ARRAY },
+    { typeof(float), ColumnType.FLOAT4 },
+    { typeof(decimal), ColumnType.NUMERIC },
+    { typeof(Array), ColumnType.TEXT_ARRAY },
+    { typeof(string[]), ColumnType.TEXT_ARRAY },
+    { typeof(object), ColumnType.UNKNOWN },
+    { typeof(Guid), ColumnType.UUID },
+    { typeof(string), ColumnType.VARCHAR },
+    { typeof(IPAddress), ColumnType.VARCHAR },
+  });
 }
