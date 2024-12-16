@@ -14,4 +14,9 @@ public class OIDType : DataRowMessage
   public string typtype { get; set; }
   public bool typnotnull { get; set; }
   public int elemtypoid { get; set; }
+
+  public override void Update()
+  {
+    throw new NotImplementedException();
+  }
 }

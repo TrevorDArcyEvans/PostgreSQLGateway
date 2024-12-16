@@ -22,26 +22,20 @@ public class VersionInfo : DataRowMessage
     Instance = records.Single();
   }
 
-  private string _version;
 
-  public string version
-  {
-    get => _version;
-
-    set
-    {
-      _version = value;
-
-      Rows.Clear();
-      var versionField = new RowField
-      {
-        Value = SerializerCore.Serialize(version)
-      };
-      Rows.Add(versionField);
-    }
-  }
+  public string version { get; set; }
 
   private VersionInfo()
   {
+  }
+
+  public override void Update()
+  {
+    Rows.Clear();
+    var versionField = new RowField
+    {
+      Value = SerializerCore.Serialize(version)
+    };
+    Rows.Add(versionField);
   }
 }

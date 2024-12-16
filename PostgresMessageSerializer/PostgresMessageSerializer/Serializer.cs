@@ -47,6 +47,13 @@ public static class Serializer
     return buffer.ToArray();
   }
 
+  public static byte[] Serialize(DataRowMessage message)
+  {
+    message.Update();
+
+    return Serialize((Message)message);
+  }
+
   public static Message DeserializeFrontEnd(byte[] bytes)
   {
     var stream = new MemoryStream(bytes);

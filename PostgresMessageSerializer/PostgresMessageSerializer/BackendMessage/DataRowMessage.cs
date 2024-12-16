@@ -9,6 +9,8 @@ public abstract class DataRowMessage : BackendMessage
   public short ColumnCount => (short) Rows.Count;
   public IList<RowField> Rows { get; } = new List<RowField>();
 
+  public abstract void Update();
+
   public override byte[] Serialize()
   {
     using var buffer = new PostgresProtocolStream();
