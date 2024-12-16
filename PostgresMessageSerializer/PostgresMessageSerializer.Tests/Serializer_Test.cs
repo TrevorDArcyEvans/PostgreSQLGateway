@@ -3,7 +3,6 @@ namespace PostgresMessageSerializer.Tests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using FluentAssertions;
 using Xunit;
 
