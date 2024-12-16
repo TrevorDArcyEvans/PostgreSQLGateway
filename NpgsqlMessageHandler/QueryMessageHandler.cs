@@ -43,11 +43,13 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
 
 
     // -- Load field definitions for (free-standing) composite types
-    // TODO   FieldDefinition
+    stream.Write(Serializer.Serialize(new FieldDefinitionDescription()));
+    stream.Write(Serializer.Serialize(new CommandCompleteMessage("SELECT 0")));
 
 
     // -- Load enum fields
-    // TODO   EnumField
+    stream.Write(Serializer.Serialize(new EnumFieldDescription()));
+    stream.Write(Serializer.Serialize(new CommandCompleteMessage("SELECT 0")));
 
 
     stream.Write(Serializer.Serialize(new ReadyForQueryMessage()));
