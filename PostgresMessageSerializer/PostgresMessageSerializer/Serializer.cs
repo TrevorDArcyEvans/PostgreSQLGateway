@@ -17,11 +17,11 @@ public static class Serializer
       .GetExecutingAssembly()
       .GetTypes()
       .Where(x =>
-        x.BaseType == typeof(FrontendMessage) ||
-        x.BaseType == typeof(BackendMessage));
+        (x.BaseType == typeof(FrontendMessage) || x.BaseType == typeof(BackendMessage)) &&
+        !x.IsAbstract);
     foreach (var msgType in msgTypes)
     {
-      var message = (Message) Activator.CreateInstance(msgType);
+      var message = (Message)Activator.CreateInstance(msgType);
 
       if (msgType.BaseType == typeof(FrontendMessage))
       {
@@ -61,7 +61,7 @@ public static class Serializer
 
   private static Message Deserialize(MemoryStream stream, Dictionary<byte, Type> messageTypeMap)
   {
-    var messageTypeId = (byte) stream.ReadByte();
+    var messageTypeId = (byte)stream.ReadByte();
 
     if (!messageTypeMap.TryGetValue(messageTypeId, out var messageType))
     {
@@ -85,7 +85,7 @@ public static class Serializer
       throw new ArgumentException("invalid payload size", nameof(stream));
     }
 
-    var message = (Message) Activator.CreateInstance(messageType);
+    var message = (Message)Activator.CreateInstance(messageType);
     message.Deserialize(payload);
     return message;
   }

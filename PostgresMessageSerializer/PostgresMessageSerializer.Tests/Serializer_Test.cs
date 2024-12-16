@@ -56,7 +56,7 @@ public class Serializer_Test
     var msgTypes = typeof(BackendMessage)
       .Assembly
       .GetTypes()
-      .Where(x => x.BaseType == typeof(BackendMessage));
+      .Where(x => x.BaseType == typeof(BackendMessage) && !x.IsAbstract);
     foreach (var msgType in msgTypes)
     {
       yield return [msgType];

@@ -2,7 +2,7 @@ namespace PostgresMessageSerializer;
 
 using System.Collections.Generic;
 
-public class DataRowMessage : BackendMessage
+public abstract class DataRowMessage : BackendMessage
 {
   public override byte MessageTypeId => (byte)'D';
 

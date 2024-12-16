@@ -12,13 +12,14 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
         !query.Query.Contains("SELECT ns.nspname, t.oid, t.typname, t.typtype, t.typnotnull, t.elemtypoid") ||
         !query.Query.Contains("-- Arrays have typtype=b - this subquery identifies them by their typreceive and converts their typtype to a") ||
         !query.Query.Contains("-- We first do this for the type (innerest-most subquery), and then for its element type") ||
-        !query.Query.Contains("-- This also returns the array element, range subtype and domain base type as elemtypoid") )
+        !query.Query.Contains("-- This also returns the array element, range subtype and domain base type as elemtypoid"))
     {
       return false;
     }
 
     var stopProcessing = false;
 
+    // TODO   create VersionInfoDescription
     // SELECT version();
     var rowDescr = new RowDescriptionMessage();
     rowDescr.RowFieldDescriptions.Add(
@@ -27,13 +28,15 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
         FieldName = "version",
         TableOid = 0,
         RowAttributeId = 0,
-        FieldTypeOid = (int) ColumnType.TEXT,
+        FieldTypeOid = (int)ColumnType.TEXT,
         DataTypeSize = -1,
         TypeModifier = -1,
         FormatCode = 0
       });
     stream.Write(Serializer.Serialize(rowDescr));
 
+    // TODO   derive VersionInfo from DataRowMessage
+#if false
     // version
     var dataRow = new DataRowMessage();
     var version = new RowField
@@ -55,6 +58,7 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
 
     // var ready = new ReadyForQueryMessage();
     // stream.Write(Serializer.Serialize(ready));
+#endif
 
     return stopProcessing;
   }

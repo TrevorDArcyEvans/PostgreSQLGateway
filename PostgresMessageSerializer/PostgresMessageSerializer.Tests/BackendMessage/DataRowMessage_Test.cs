@@ -10,7 +10,7 @@ public class DataRowMessage_Test
   public void Serialize_Deserialize_roundtrip()
   {
     // arrange
-    var sut = new DataRowMessage();
+    var sut = new TestDataRowMessage();
     for (var i = 1; i <= 3; i++)
     {
       var rowField = new RowField();
@@ -28,10 +28,14 @@ public class DataRowMessage_Test
 
     // act
     var data = sut.Serialize();
-    var result = new DataRowMessage();
+    var result = new TestDataRowMessage();
     result.Deserialize(data);
 
     // assert
     result.Should().BeEquivalentTo(sut);
+  }
+
+  private class TestDataRowMessage : DataRowMessage
+  {
   }
 }
