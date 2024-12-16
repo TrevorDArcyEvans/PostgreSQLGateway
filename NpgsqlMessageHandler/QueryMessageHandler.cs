@@ -20,23 +20,29 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
     var stopProcessing = false;
 
     // SELECT version();
-    var rowDescr = new VersionInfoDescription();
-    stream.Write(Serializer.Serialize(rowDescr));
+    stream.Write(Serializer.Serialize(new VersionInfoDescription()));
 
-    // TODO   derive VersionInfo from DataRowMessage
     // version
-    var dataRow = new VersionInfo("PostgreSQL 17.2 (Debian 17.2-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit");
-    stream.Write(Serializer.Serialize(dataRow));
+    stream.Write(Serializer.Serialize(VersionInfo.Instance));
+
+    stream.Write(Serializer.Serialize(new CommandCompleteMessage("SELECT 1")));
 
 
-    var complete = new CommandCompleteMessage("SELECT 1");
-    stream.Write(Serializer.Serialize(complete));
+    // SELECT ns.nspname, t.oid, t.typname, t.typtype, t.typnotnull, t.elemtypoid
+    // TODO   OIDType
+    stream.Write(Serializer.Serialize(new OIDTypeDescription()));
+    stream.Write(Serializer.Serialize(new CommandCompleteMessage("SELECT 1")));
 
-    stream.Write(Serializer.Serialize(rowDescr));
-    stream.Write(Serializer.Serialize(complete));
 
-    // var ready = new ReadyForQueryMessage();
-    // stream.Write(Serializer.Serialize(ready));
+    // -- Load field definitions for (free-standing) composite types
+    // TODO   FieldDefinition
+
+
+    // -- Load enum fields
+    // TODO   EnumField
+
+
+    stream.Write(Serializer.Serialize(new ReadyForQueryMessage()));
 
     return stopProcessing;
   }

@@ -1,3 +1,5 @@
+using System;
+
 namespace PostgresMessageSerializer;
 
 public class RowFieldDescription
@@ -42,4 +44,19 @@ public class RowFieldDescription
   /// the format code is not yet known and will always be zero.
   /// </summary>
   public short FormatCode { get; set; }
+
+  public RowFieldDescription()
+  {
+  }
+
+  public RowFieldDescription(Type type, string propName)
+  {
+    FieldName = propName;
+    TableOid = 0;
+    RowAttributeId = 0;
+    FieldTypeOid = (int)ColumnTypeExtensions.TypeToColumnTypeMap[type.GetProperty(propName).PropertyType];
+    DataTypeSize = ColumnTypeExtensions.DataTypeSize(ColumnTypeExtensions.TypeToColumnTypeMap[type.GetProperty(propName).PropertyType]);
+    TypeModifier = -1;
+    FormatCode = 0;
+  }
 }

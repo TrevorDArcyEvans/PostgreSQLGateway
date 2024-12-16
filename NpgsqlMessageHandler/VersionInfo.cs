@@ -1,5 +1,8 @@
 namespace NpgsqlMessageHandler;
 
+using System.Reflection;
+using System.Globalization;
+using CsvHelper;
 using PostgresMessageSerializer;
 
 /// <summary>
@@ -8,15 +11,37 @@ using PostgresMessageSerializer;
 /// </summary>
 public class VersionInfo : DataRowMessage
 {
-  public string version { get; } // 25 = TEXT
+  public static readonly VersionInfo Instance;
 
-  public VersionInfo(string version)
+  static VersionInfo()
   {
-    this.version = version;
-    var versionField = new RowField
+    using var reader = new StreamReader(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "_select_version__202412151616.csv"));
+    using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+    var records = csv.GetRecords<VersionInfo>().ToList();
+
+    Instance = records.Single();
+  }
+
+  private string _version;
+
+  public string version
+  {
+    get => _version;
+
+    set
     {
-      Value = SerializerCore.Serialize(this.version)
-    };
-    Rows.Add(versionField);
+      _version = value;
+
+      Rows.Clear();
+      var versionField = new RowField
+      {
+        Value = SerializerCore.Serialize(version)
+      };
+      Rows.Add(versionField);
+    }
+  }
+
+  private VersionInfo()
+  {
   }
 }
