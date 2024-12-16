@@ -16,19 +16,10 @@ public class DummyDataMessage : DataRowMessage
   public override void Update()
   {
     Rows.Clear();
-    // Id
-    var idField = new RowField
-    {
-      // WTF?  Have to serialise int32 as string
-      Value = SerializerCore.Serialize(Id.ToString())
-    };
-    Rows.Add(idField);
 
-    // Name
-    var nameField = new RowField
-    {
-      Value = SerializerCore.Serialize(Name)
-    };
-    Rows.Add(nameField);
+    // WTF?  Have to serialise int32 as string
+    Rows.Add(new RowField {Value = SerializerCore.Serialize(Id.ToString())});
+
+    Rows.Add(new RowField {Value = SerializerCore.Serialize(Name)});
   }
 }

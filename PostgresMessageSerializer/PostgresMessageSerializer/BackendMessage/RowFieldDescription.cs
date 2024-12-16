@@ -1,6 +1,6 @@
-using System;
-
 namespace PostgresMessageSerializer;
+
+using System;
 
 public class RowFieldDescription
 {
@@ -56,6 +56,17 @@ public class RowFieldDescription
     RowAttributeId = 0;
     FieldTypeOid = (int)ColumnTypeExtensions.TypeToColumnTypeMap[type.GetProperty(propName).PropertyType];
     DataTypeSize = ColumnTypeExtensions.DataTypeSize(ColumnTypeExtensions.TypeToColumnTypeMap[type.GetProperty(propName).PropertyType]);
+    TypeModifier = -1;
+    FormatCode = 0;
+  }
+
+  public RowFieldDescription(ColumnType type, string propName)
+  {
+    FieldName = propName;
+    TableOid = 0;
+    RowAttributeId = 0;
+    FieldTypeOid = (int)type;
+    DataTypeSize = ColumnTypeExtensions.DataTypeSize(type);
     TypeModifier = -1;
     FormatCode = 0;
   }

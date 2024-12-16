@@ -1,7 +1,6 @@
 namespace PostgresMessageSerializer;
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -40,5 +39,10 @@ public static class SerializerCore
   public static byte[] Serialize(byte value)
   {
     return [value];
+  }
+
+  public static byte[] Serialize(bool value)
+  {
+    return value ? [(byte) 't'] : [(byte) 'f'];
   }
 }

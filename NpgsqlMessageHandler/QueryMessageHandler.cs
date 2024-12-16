@@ -31,7 +31,15 @@ public class QueryMessageHandler : IMessageHandler<QueryMessage>
     // SELECT ns.nspname, t.oid, t.typname, t.typtype, t.typnotnull, t.elemtypoid
     // TODO   OIDType
     stream.Write(Serializer.Serialize(new OIDTypeDescription()));
-    stream.Write(Serializer.Serialize(new CommandCompleteMessage("SELECT 1")));
+
+    foreach (var oid in OIDType.Instance)
+    {
+      //stream.Write(Serializer.Serialize(oid));
+    }
+
+    stream.Write(Serializer.Serialize(OIDType.Instance.First()));
+
+    stream.Write(Serializer.Serialize(new CommandCompleteMessage($"SELECT {OIDType.Instance.Count}")));
 
 
     // -- Load field definitions for (free-standing) composite types

@@ -1,5 +1,8 @@
 namespace NpgsqlMessageHandler;
 
+using System.Globalization;
+using System.Reflection;
+using CsvHelper;
 using PostgresMessageSerializer;
 
 /// <summary>
@@ -8,15 +11,34 @@ using PostgresMessageSerializer;
 /// </summary>
 public class OIDType : DataRowMessage
 {
-  public string nspname { get; set; }
-  public int oid { get; set; }
-  public string typname { get; set; }
-  public string typtype { get; set; }
-  public bool typnotnull { get; set; }
-  public int elemtypoid { get; set; }
+  public static readonly List<OIDType> Instance;
+
+  static OIDType()
+  {
+    const string DataFile = "_SELECT_ns_nspname_t_oid_t_typname_t_typtype_t_typnotnull_t_elem_202412151616.csv";
+
+    using var reader = new StreamReader(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), DataFile));
+    using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+    csv.Context.RegisterClassMap<OIDTypeMap>();
+    Instance = csv.GetRecords<OIDType>().ToList();
+  }
+
+  public string nspname { get; set; } // 19 = NAME
+  public int oid { get; set; } // 26 = OID
+  public string typname { get; set; } // 19 = NAME
+  public string typtype { get; set; } // 18 = CHAR
+  public bool typnotnull { get; set; } // 16 = BOOL
+  public int elemtypoid { get; set; } // 26 = OID
 
   public override void Update()
   {
-    throw new NotImplementedException();
+    Rows.Clear();
+
+    Rows.Add(new RowField {Value = SerializerCore.Serialize(nspname)});
+    Rows.Add(new RowField {Value = SerializerCore.Serialize(oid)});
+    Rows.Add(new RowField {Value = SerializerCore.Serialize(typname)});
+    Rows.Add(new RowField {Value = SerializerCore.Serialize(typtype)});
+    Rows.Add(new RowField {Value = SerializerCore.Serialize(typnotnull)});
+    Rows.Add(new RowField {Value = SerializerCore.Serialize(elemtypoid)});
   }
 }

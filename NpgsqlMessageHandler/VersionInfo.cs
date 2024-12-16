@@ -15,7 +15,9 @@ public class VersionInfo : DataRowMessage
 
   static VersionInfo()
   {
-    using var reader = new StreamReader(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "_select_version__202412151616.csv"));
+    const string DataFile = "_select_version__202412151616.csv";
+
+    using var reader = new StreamReader(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), DataFile));
     using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
     var records = csv.GetRecords<VersionInfo>().ToList();
 
@@ -32,6 +34,7 @@ public class VersionInfo : DataRowMessage
   public override void Update()
   {
     Rows.Clear();
+
     var versionField = new RowField
     {
       Value = SerializerCore.Serialize(version)
